@@ -11,6 +11,7 @@ root.render(
   </React.StrictMode>
 );
 
+/*
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
@@ -33,3 +34,25 @@ function showPosition() {
 showPosition();
 var coordinates=JSON.parse(localStorage.getItem("Coords"));
 alert(coordinates);
+*/
+
+
+
+function main() {
+	var predictor = require("./predictor.js");
+	var lat = coordinates[0];
+	var lon = coordinates[1];
+	alert(predictor.averageLocalTemp(lat, lon));
+}
+
+
+var coordinates;
+function setCoordinates(position) {
+	coordinates = [position.coords.latitude, position.coords.longitude];
+	main();
+}
+
+if (navigator.geolocation)
+	navigator.geolocation.getCurrentPosition(setCoordinates);
+else
+	alert("Sorry, your browser does not support HTML5 geolocation.");
