@@ -74,3 +74,8 @@ function averageLocalTemp(lat, lon) {
 function averageLocalHum(lat, lon) {
 
 }
+
+
+module.exports = {
+	daysToMaturity
+}

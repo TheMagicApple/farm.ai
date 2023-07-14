@@ -11,10 +11,10 @@ root.render(
   </React.StrictMode>
 );
 
+/*
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-/*
 reportWebVitals();
 
 function showPosition() {
@@ -39,9 +39,11 @@ alert(coordinates);
 
 
 function main() {
+	var predictor = require("./predictor.js");
 	var lat = coordinates[0];
 	var lon = coordinates[1];
 	alert(lat + ", " + lon);
+	alert(predictor.daysToMaturity("Tomato", 20, 18));
 }
 
 
