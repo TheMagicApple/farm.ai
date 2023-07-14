@@ -42,8 +42,7 @@ function main() {
 	var predictor = require("./predictor.js");
 	var lat = coordinates[0];
 	var lon = coordinates[1];
-	alert(lat + ", " + lon);
-	alert(predictor.daysToMaturity("Tomato", 20, 18));
+	alert(predictor.averageLocalTemp(lat, lon));
 }
 
 
