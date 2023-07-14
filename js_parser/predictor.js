@@ -64,3 +64,13 @@ function daysToMaturity(plantType, localTemp, localHum, daysGrowing = 0) {
 
 	return totalDays;
 }
+
+
+function averageLocalTemp(lat, lon) {
+
+}
+
+
+function averageLocalHum(lat, lon) {
+
+}
