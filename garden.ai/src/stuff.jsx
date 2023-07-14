@@ -28,6 +28,66 @@ class Home extends React.Component{
                 </>
     }
 }
+class Garden extends React.Component{
+    constructor(props){
+        super(props);
+        var soilBlocks=[];
+        var soilPositions=[];
+        var gardenSize=6;
+        var x=5;
+        var y=40;
+        for(let i=0;i<gardenSize;i++){
+            var soilPosition=[];
+            for(let k=0;k<gardenSize;k++){
+                soilBlocks.push(<SoilBlock left={x+"%"} top={y+"%"} width="10%" height="20%"/>)
+                soilPosition.push([x,y]);
+                x+=6;
+                y+=7; 
+            }
+            soilPositions.push(soilPosition);
+            x=5+(i+1)*6;
+            y=40-(i+1)*7;
+        }
+        this.state={soilBlocks:soilBlocks,soilPositions:soilPositions,plants:[]};
+        this.placeFruit=this.placeFruit.bind(this);
+    }
+    placeFruit(event){
+        var x=event.screenX/19.2;
+        var y=(event.screenY-50)/10.8;
+        var minDistance=10000000;
+        var minSoil=[];
+    
+        for(let i=0;i<this.state.soilPositions.length;i++){
+            for(let k=0;k<this.state.soilPositions[i].length;k++){
+                var sx=this.state.soilPositions[i][k][0]+5;
+                var sy=this.state.soilPositions[i][k][1]+10;
+                var distance=Math.sqrt(Math.pow(sx-x,2)+Math.pow(sy-y,2));
+                if(distance<minDistance){
+                    minDistance=distance;
+                    minSoil=[i,k];
+                }
+            }
+        }
+        var plantX=5;
+        var plantY=40;
+        var plants=this.state.plants;
+
+        plantX=5+(minSoil[0])*6;
+        plantY=40-(minSoil[0])*7;
+        plantX+=6*minSoil[1];
+        plantY+=7*minSoil[1];
+        plants.push(<img className="gardenFood" src={require('./Tomato.png')} style={{width:"100px",height:"100px",position:"absolute",left:(plantX+2.5)+"%",top:(plantY-5)+"%"}}/>);
+        
+        this.setState({plants:plants});
+    }
+    render(){
+        return  <>
+                
+                <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
+                <div>{this.state.plants}</div>
+                </>
+    }
+}
 class FallingFruit extends React.Component{
     constructor(props){
         super(props);
@@ -38,6 +98,15 @@ class FallingFruit extends React.Component{
                 </>
     }
 }
+class SoilBlock extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return  <>
+                    <img src={require('./soil.png')} style={{position:"absolute",left:this.props.left,top:this.props.top,width:this.props.width,height:this.props.height,filter:"contrast(70%)"}}/>
+                </>
+    }
+}
 
-
-export {Home}
+export {Home, Garden}

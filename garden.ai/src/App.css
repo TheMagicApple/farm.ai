@@ -75,3 +75,11 @@ body{
 .button:hover{
   filter:brightness(90%);
 }
+.gardenFood{
+  animation:float 3s ease infinite; 
+}
+@keyframes float{
+	0% { transform: translate(0,  0px); }
+    50%  { transform: translate(0px, 15px); }
+    100%   { transform: translate(-0, -0px); }   
+}
