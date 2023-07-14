@@ -60,6 +60,7 @@ for row in rows:
     info["hum"] = hum_avg
 
     json_data[name] = info
+    print(name)
 
 with open(json_file, "w") as f:
     json.dump(json_data, f)
