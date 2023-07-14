@@ -15,3 +15,21 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+function showPosition() {
+  
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      coordinates = [position.coords.latitude, position.coords.longitude];
+      localStorage.setItem("Coords",JSON.stringify(coordinates)); 
+      })
+                
+             
+        } else {
+            alert("Sorry, your browser does not support HTML5 geolocation.");
+        }
+    
+}
+showPosition();
+var coordinates=JSON.parse(localStorage.getItem("Coords"));
+alert(coordinates);
