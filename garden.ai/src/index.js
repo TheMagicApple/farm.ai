@@ -20,13 +20,17 @@ var lon;
 var temp;
 var hum;
 
+var initialized = false;
 
+
+/*
 function main() {
 	var predictor = require("./predictor.js");
 	
 	alert("lat=" + lat +", lon=" + lon + ", temp=" + temp + "C, hum=" + hum + "%");
 	//alert(predictor.daysToMaturity("Tomato", temp, hum, 57));
 }
+*/
 
 
 /**
@@ -64,7 +68,7 @@ function setWeatherData() {
 				temp = data.main.temp;
 				hum = data.main.humidity;
 			}
-			main();
+			initialized = true;
 		})
 	    .catch((error) => {
 			console.error(error);
