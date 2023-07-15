@@ -205,7 +205,7 @@ class Garden extends React.Component {
         }
         var cropSelects=[];
         for(let i=0;i<crops.length;i++){
-            cropSelects.push(<CropSelector left="90%" top={i*15+"%"} width="100px" height="100px" cropName={crops[i]}/>)
+            cropSelects.push(<CropSelector left="90%" top={5+i*20+"%"} width="100px" height="100px" cropName={crops[i]}/>)
         }
         this.state = {
             soilBlocks: soilBlocks,
@@ -352,7 +352,8 @@ class CropSelector extends React.Component {
         super(props);
     }
     render() {
-            return ( <>
+            return <>
+                <div style={{position:"absolute", left:"calc("+this.props.left+" - "+this.props.width+" / 2)",top:"calc("+this.props.top+" + 0px)",width:"calc("+this.props.width+" * 2)",height:"calc("+this.props.height+" * 1.5)",border:"2px solid rgba(0,0,0,0.1)",borderRadius:"30px"}}></div>
                 <img
                     src={require("./asset/" + this.props.cropName+".png")}
                     style={{
@@ -368,11 +369,12 @@ class CropSelector extends React.Component {
                     left:"calc("+this.props.left+" - "+this.props.width+" / 2)",
                     top:"calc("+this.props.top+" + 70px)",
                     textAlign:"center",
-                    width:"calc("+this.props.width+" * 2)"
-
+                    width:"calc("+this.props.width+" * 2)",
+                    fontFamily: "'Open Sans', sans-serif",
+                    color:"rgba(0,0,0,0.6)"
                 }}>{this.props.cropName}</h1>
             </>
-        )
+    
     }
 }
 
