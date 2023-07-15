@@ -75,28 +75,21 @@ class Home extends React.Component {
             fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={i * 2 + "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
         }
         this.setState({ fallingFruit });
+        
         const provider = new GoogleAuthProvider();
         const auth = getAuth();
         signInWithPopup(auth, provider)
             .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
-                // The signed-in user info.
                 const user = result.user;
                 alert(user.uid);
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
             }).catch((error) => {
-                // Handle Errors here.
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                // The email of the user's account used.
                 const email = error.customData.email;
-                // The AuthCredential type that was used.
                 const credential = GoogleAuthProvider.credentialFromError(error);
-                // ...
-            });
+        });
     }
     
 
@@ -537,7 +530,7 @@ class CropPrediction extends React.Component{
                     <div style={{position:"absolute",left:this.props.left,top:this.props.top,width:"15%",height:"15%",backgroundColor:this.props.backgroundColor,borderRadius:"5px"}}>
                         <img style={{backgroundColor:"white",position:"absolute",width:"100px",height:"100px",left:"7%",top:"10%",borderRadius:"10px"}}src={require("./asset/"+this.props.cropName+".png")}/>
                         <div className="div" style={{width:"100px",left:"7%",fontSize:"20px",color:"white",top:"80%"}}><b>{this.props.cropName}</b></div>
-                        <div className="div" style={{width:"60%",left:"40%",fontSize:"40px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
+                        <div className="div" style={{width:"60%",left:"40%",fontSize:"35px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
                         <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
                     </div>
                 </>
