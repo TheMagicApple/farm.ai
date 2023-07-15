@@ -183,6 +183,8 @@ class Garden extends React.Component {
             "Turnip",
             "Watercress",
         ];
+
+        this.selectCrop=this.selectCrop.bind(this);
         
         var soilBlocks = [];
         var soilPositions = [];
@@ -200,14 +202,14 @@ class Garden extends React.Component {
                 y += 7;
             }
             soilPositions.push(soilPosition);
-            x = 3 + (i + 1) * 6;
+            x = 3+ (i + 1) * 6;
             y = 40 - (i + 1) * 7;
         }
         var cropSelects=[];
         for(let i=0;i<crops.length;i++){
             var left="80%";
             if(i%2==1) left="91.5%"
-            cropSelects.push(<CropSelector left={left} top={3+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]}/>)
+            cropSelects.push(<CropSelector onClick={this.selectCrop} left={left} top={9+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]} border="2px solid rgba(0,0,0,0.1)"/>)
         }
         this.state = {
             soilBlocks: soilBlocks,
@@ -215,8 +217,79 @@ class Garden extends React.Component {
             plants: [],
             plantPositions: [],
             cropSelects:cropSelects,
+            cropSelected:"Tomato",
+            selectX:"",
+            selectY:"",
         };
         this.placeFruit = this.placeFruit.bind(this);
+    }
+    selectCrop(event,cropName){
+        var crops=[
+            "Tomato",
+            "Carrot",
+            "Lettuce",
+            "Cucumber",
+            "Spinach",
+            "Bell Pepper",
+            "Broccoli",
+            "Cabbage",
+            "Onion",
+            "Strawberry",
+            "Potato",
+            "Zucchini",
+            "Green Bean",
+            "Radish",
+            "Watermelon",
+            "Pumpkin",
+            "Sweet Corn",
+            "Cauliflower",
+            "Eggplant",
+            "Cilantro",
+            "Cantaloupe",
+            "Garlic",
+            "Kale",
+            "Peas",
+            "Beetroot",
+            "Raspberry",
+            "Blueberry",
+            "Mint",
+            "Parsley",
+            "Cherry",
+            "Grapes",
+            "Squash",
+            "Artichoke",
+            "Asparagus",
+            "Brussels",
+            "Celery",
+            "Collard Greens",
+            "Green Onion",
+            "Honeydew",
+            "Kiwi",
+            "Lima Beans",
+            "Mango",
+            "Peach",
+            "Pear",
+            "Pineapple",
+            "Pomegranate",
+            "Rhubarb",
+            "Tomatillo",
+            "Turnip",
+            "Watercress",
+        ];
+
+        var cropSelects=[];
+        for(let i=0;i<crops.length;i++){
+            var left="80%";
+            if(i%2==1) left="91.5%"
+            if(crops[i]==cropName)cropSelects.push(<CropSelector onClick={this.selectCrop} left={left} top={9+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]} border="2px solid rgba(0,0,0,1)"/>);
+            else cropSelects.push(<CropSelector onClick={this.selectCrop} left={left} top={9+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]} border="2px solid rgba(0,0,0,0.1)"/>);
+        }
+
+       
+        
+        this.setState({cropSelected:cropName,cropSelects});
+        
+        
     }
     placeFruit(event) {
         var x = event.screenX / 19.2;
@@ -262,7 +335,7 @@ class Garden extends React.Component {
                     break;
                 }
             }
-            plants.splice(index);
+            plants.splice(index,1);
             plantPositions.splice(plantPositions.indexOf(minSoil));
         } else {
             var plantX = 3;
@@ -274,7 +347,7 @@ class Garden extends React.Component {
             plants.push(
                 <img
                     className="gardenFood"
-                    src={require("./asset/Tomato.png")}
+                    src={require("./asset/"+this.state.cropSelected+".png")}
                     style={{
                         width: "100px",
                         height: "100px",
@@ -292,11 +365,13 @@ class Garden extends React.Component {
     render() {
         return (
             <>
-               <Timeline></Timeline>
+               {/*<Timeline></Timeline>*/}
                 <div style={{position:"absolute",height:"100%",width:"100%",overflow:"scroll"}}>{this.state.cropSelects}</div>
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
-                <div>{this.state.plants}</div>
                 
+                <div>{this.state.plants}</div>
+                <div style={{position:"absolute",width:"2px",height:"100%",left:"75%",top:"0%",backgroundColor:"rgba(0,0,0,0.2)"}}></div>
+                <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>Select A Plant</div>
             </>
         );
     }
@@ -341,7 +416,8 @@ class SoilBlock extends React.Component {
                         top: this.props.top,
                         width: this.props.width,
                         height: this.props.height,
-                        filter: "contrast(70%)",
+                        filter: "contrast(60%)",
+                        
                     }}
                 />
             </>
@@ -352,10 +428,14 @@ class SoilBlock extends React.Component {
 class CropSelector extends React.Component {
     constructor(props) {
         super(props);
+        this.selectCrop=this.selectCrop.bind(this);
+    }
+    selectCrop(event){
+        this.props.onClick(event,this.props.cropName);
     }
     render() {
             return <>
-                <div style={{position:"absolute", left:"calc("+this.props.left+" - "+this.props.width+" / 2)",top:"calc("+this.props.top+" + 0px)",width:"calc("+this.props.width+" * 2)",height:"calc("+this.props.height+" * 1.5)",border:"2px solid rgba(0,0,0,0.1)",borderRadius:"30px"}}></div>
+                
                 <img
                     src={require("./asset/" + this.props.cropName+".png")}
                     style={{
@@ -376,6 +456,7 @@ class CropSelector extends React.Component {
                     color:"rgba(0,0,0,1)",
                     fontSize:"25px",
                 }}>{this.props.cropName}</h1>
+                <div onClick={this.selectCrop} style={{position:"absolute", left:"calc("+this.props.left+" - "+this.props.width+" / 2)",top:"calc("+this.props.top+" + 0px)",width:"calc("+this.props.width+" * 2)",height:"calc("+this.props.height+" * 1.5)",border:this.props.border,borderRadius:"30px"}}></div>
             </>
     
     }
@@ -419,7 +500,7 @@ class CropMarker extends React.Component { // marker that displays grop range in
             left:this.props.left, 
             height: "10px",
             width: "2px",
-            "background-color": "red",
+            backgroundColor: "red",
         }}>
 
         </div>
