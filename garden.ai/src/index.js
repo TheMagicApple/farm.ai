@@ -15,6 +15,6 @@ root.render(
 
 var predictor = require("./predictor.js");
 predictor.initialize(() => {
-	var time = predictor.predict("Tomato");
-	alert("Your plant will be ready in " + time + " days");	
+	var result = predictor.predict("Tomato");
+	alert("Your plant will be ready in " + result.time + " days and will yield " + result.amount);	
 });

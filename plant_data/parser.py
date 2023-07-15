@@ -31,7 +31,7 @@ rows = rows[1:] # Remove the header row
 json_data: dict = {}
 for row in rows:
     row_split: list = row.split(",")
-    if (len(row_split) != 4):
+    if (len(row_split) != 5):
         print(f"WARN (parser)  plant info row with invalid information: {row}")
         continue
     
@@ -40,6 +40,7 @@ for row in rows:
     time_str: str = row_split[1]
     temp_str: str = row_split[2]
     hum_str: str = row_split[3]
+    amount: str = row_split[4]
 
     time: int
     temp_avg: int
@@ -58,6 +59,7 @@ for row in rows:
     info["time"] = time
     info["temp"] = temp_avg
     info["hum"] = hum_avg
+    info["wt"] = amount
 
     json_data[name] = info
     print(name)

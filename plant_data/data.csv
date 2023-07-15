@@ -1,52 +1,51 @@
-Plant Name,Growing Time (Days),Ideal Temperature (°C),Ideal Humidity (%)
-Tomato,60,21-29,40-70
-Carrot,70,10-25,60-80
-Lettuce,50,10-24,40-60
-Cucumber,60,21-29,60-70
-Spinach,40,10-24,50-70
-Bell Pepper,70,21-29,40-70
-Broccoli,70,18-23,40-60
-Cabbage,70,10-22,40-70
-Onion,100,13-24,40-70
-Strawberry,60,15-25,50-70
-Potato,80,15-25,70-80
-Zucchini,50,21-29,50-70
-Green Bean,60,21-29,50-70
-Radish,30,10-25,40-60
-Watermelon,80,21-32,60-80
-Pumpkin,90,21-32,60-80
-Sweet Corn,70,18-32,50-70
-Cauliflower,70,10-22,40-70
-Eggplant,70,21-29,40-70
-Cilantro,40,15-27,40-60
-Cantaloupe,90,21-32,60-80
-Garlic,90,10-25,40-70
-Kale,55,10-24,40-60
-Peas,70,10-24,40-60
-Beetroot,60,10-24,40-70
-Raspberry,80,15-27,50-70
-Blueberry,90,10-29,40-70
-Mint,60,18-27,40-60
-Parsley,70,10-24,40-60
-Cherry,70,21-29,40-70
-Grapes,100,15-25,50-80
-Squash,50,21-32,50-70
-Artichoke,85,13-24,40-70
-Asparagus,80,18-24,40-60
-Brussels,90,13-24,40-70
-Celery,120,15-21,60-80
-Collard Greens,70,15-27,40-60
-Green Onion,60,15-27,40-70
-Honeydew,100,18-32,60-80
-Kiwi,150,18-24,60-80
-Lima Beans,70,18-29,40-70
-Mango,120,24-32,60-80
-Peach,100,15-27,40-70
-Pear,120,15-24,50-80
-Pineapple,180,21-32,60-80
-Pomegranate,150,21-29,40-70
-Radish,30,10-25,40-60
-Rhubarb,150,10-24,40-60
-Tomatillo,75,21-29,40-70
-Turnip,50,10-24,40-70
-Watercress,60,10-24,50-70
+Plant Name,Growing Time (Days),Ideal Temperature (°C),Ideal Humidity (%),Amount of Produce
+Tomato,60,21-29,40-70,10-20 kg
+Carrot,70,10-25,60-80,1-2 kg
+Lettuce,50,10-24,40-60,0.5-1 kg
+Cucumber,60,21-29,60-70,5-10 kg
+Spinach,40,10-24,50-70,0.3-0.5 kg
+Bell Pepper,70,21-29,40-70,2-4 kg
+Broccoli,70,18-23,40-60,0.5-1 kg
+Cabbage,70,10-22,40-70,3-5 kg
+Onion,100,13-24,40-70,1-2 kg
+Strawberry,60,15-25,50-70,0.5-1 kg
+Potato,80,15-25,70-80,5-10 kg
+Zucchini,50,21-29,50-70,3-6 kg
+Green Bean,60,21-29,50-70,2-4 kg
+Radish,30,10-25,40-60,0.3-0.5 kg
+Watermelon,80,21-32,60-80,10-20 kg
+Pumpkin,90,21-32,60-80,5-10 kg
+Sweet Corn,70,18-32,50-70,3-6 kg
+Cauliflower,70,10-22,40-70,0.5-1 kg
+Eggplant,70,21-29,40-70,2-4 kg
+Cilantro,40,15-27,40-60,0.1-0.2 kg
+Cantaloupe,90,21-32,60-80,5-10 kg
+Garlic,90,10-25,40-70,0.5-1 kg
+Kale,55,10-24,40-60,0.5-1 kg
+Peas,70,10-24,40-60,2-4 kg
+Beetroot,60,10-24,40-70,1-2 kg
+Raspberry,80,15-27,50-70,0.5-1 kg
+Blueberry,90,10-29,40-70,0.5-1 kg
+Mint,60,18-27,40-60,0.1-0.2 kg
+Parsley,70,10-24,40-60,0.1-0.2 kg
+Cherry,70,21-29,40-70,1-2 kg
+Grapes,100,15-25,50-80,5-10 kg
+Squash,50,21-32,50-70,5-10 kg
+Artichoke,85,13-24,40-70,0.5-1 kg
+Asparagus,80,18-24,40-60,0.5-1 kg
+Brussels Sprouts,90,13-24,40-70,0.5-1 kg
+Celery,120,15-21,60-80,0.5-1 kg
+Collard Greens,70,15-27,40-60,0.5-1 kg
+Green Onion,60,15-27,40-70,0.1-0.2 kg
+Honeydew Melon,100,18-32,60-80,5-10 kg
+Kiwi,150,18-24,60-80,1-2 kg
+Lima Beans,70,18-29,40-70,2-4 kg
+Mango,120,24-32,60-80,5-10 kg
+Peach,100,15-27,40-70,1-2 kg
+Pear,120,15-24,50-80,2-4 kg
+Pineapple,180,21-32,60-80,2-4 kg
+Pomegranate,150,21-29,40-70,1-2 kg
+Rhubarb,150,10-24,40-60,0.5-1 kg
+Tomatillo,75,21-29,40-70,2-4 kg
+Turnip,50,10-24,40-70,0.5-1 kg
+Watercress,60,10-24,50-70,0.1-0.2 kg
