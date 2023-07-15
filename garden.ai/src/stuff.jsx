@@ -344,7 +344,6 @@ class Garden extends React.Component {
                     break;
                 }
             }
-           // alert(plantPositions[plantPositions.indexOf(minSoil)]);
             plantPositions.splice(index2,1);
         } else {
             var plantX = 3;
