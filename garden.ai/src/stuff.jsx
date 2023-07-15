@@ -2,6 +2,10 @@ import { toHaveAccessibleDescription } from "@testing-library/jest-dom/matchers.
 import React from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
+import {db} from "./firebaseDb.js";
+import {doc,collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, getDocs} from "firebase/firestore"; 
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 var predictor = require("./predictor.js")
 class Home extends React.Component {
     constructor(props) {
@@ -71,7 +75,32 @@ class Home extends React.Component {
             fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={i * 2 + "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
         }
         this.setState({ fallingFruit });
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                alert(user.uid);
+                // IdP data available using getAdditionalUserInfo(result)
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                // ...
+            });
     }
+    
+
+
     render() {
         return (
             <>
