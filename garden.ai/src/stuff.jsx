@@ -229,6 +229,7 @@ class Garden extends React.Component {
             cropTypes:[], //sample data
             cropTimes:[], //also sample data
             dayPx:0, //day to pixels ratio for timeline
+            cropPredictions:[],
         };
         this.placeFruit = this.placeFruit.bind(this);
         this.activateEditing=this.activateEditing.bind(this);
@@ -304,8 +305,7 @@ class Garden extends React.Component {
             else cropSelects.push(<CropSelector onClick={this.selectCrop} left={left} top={9+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]} border="2px solid rgba(0,0,0,0.1)"/>);
         }
 
-        this.predictTime(cropName);
-        setTimeout(() => {alert(Math.round(this.state.predictAnswer.time)+" "+this.state.predictAnswer.amount);}, 500);
+       
         
         this.setState({cropSelected:cropName,cropSelects});
         
@@ -426,7 +426,7 @@ class Garden extends React.Component {
 				amounts[cropType] = [minAmount, maxAmount];
 			}, 500);
 		}
-       
+        setTimeout(() => {alert(amounts["Tomato"]);},2000);
     }
     render() {
         return (
@@ -470,12 +470,28 @@ class Garden extends React.Component {
                 
                 
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
-                
+                <CropPrediction left="80%" top="10%" backgroundColor="#F73D4A" cropName="Tomato" cropPrediction="10 - 20"/>
+
                 <div>{this.state.plants}</div>
                 <div style={{position:"absolute",width:"2px",height:"100%",left:"75%",top:"0%",backgroundColor:"rgba(0,0,0,0.2)"}}></div>
                 <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>{this.state.editingStyle.opacity=="1"?"Select A Plant":"Plant Yields"}</div>
             </>
         );
+    }
+}
+class CropPrediction extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return  <>
+                    <div style={{position:"absolute",left:this.props.left,top:this.props.top,width:"15%",height:"15%",backgroundColor:this.props.backgroundColor,borderRadius:"5px"}}>
+                        <img style={{backgroundColor:"white",position:"absolute",width:"100px",height:"100px",left:"7%",top:"10%",borderRadius:"10px"}}src={require("./asset/"+this.props.cropName+".png")}/>
+                        <div className="div" style={{width:"100px",left:"7%",fontSize:"20px",color:"white",top:"80%"}}>{this.props.cropName}</div>
+                        <div className="div" style={{width:"60%",left:"40%",fontSize:"40px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
+                        <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
+                    </div>
+                </>
     }
 }
 class FallingFruit extends React.Component {
