@@ -20,17 +20,30 @@ var lon;
 var temp;
 var hum;
 
+var predictor = require("./predictor.js");
 var initialized = false;
 
 
-/*
-function main() {
-	var predictor = require("./predictor.js");
-	
-	alert("lat=" + lat +", lon=" + lon + ", temp=" + temp + "C, hum=" + hum + "%");
-	//alert(predictor.daysToMaturity("Tomato", temp, hum, 57));
+/**
+ * Predicts the number of days until a plant is grown.
+ *
+ * @param type         the type of plant.
+ * @param daysGrowing  the number of days this plant has spent growing so far.
+ *
+ * @return the number of days until the plant is grown.
+ */
+function predict(type, daysGrowing = 0) {
+	if (!initialized)
+		setTimeout(predict, 100, type, daysGrowing); // Wait for data init before continuing
+	else {
+		var time = predictor.daysToMaturity(type, temp, hum, daysGrowing);
+		alert("Your " + type + " plant will be ready in " + time + " days");
+		return time;
+	}
 }
-*/
+
+
+predict("Tomato");
 
 
 /**
