@@ -223,8 +223,8 @@ class Garden extends React.Component {
             selectY:"",
             predictAnswer:"",
             cropsPlaced:[],
-            editingStyle:{color: "white",backgroundColor: "#00affa",border:"none"},
-            managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},
+            editingStyle:{color: "white",backgroundColor: "#00affa",border:"none",opacity:"1"},
+            managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},
         };
         this.placeFruit = this.placeFruit.bind(this);
         this.activateEditing=this.activateEditing.bind(this);
@@ -390,10 +390,10 @@ class Garden extends React.Component {
         this.setState({ plants, plantPositions,cropsPlaced});
     }
     activateEditing(){
-        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},});
+        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},});
     }
     activateManaging(){
-        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},});
+        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},});
 
 		var cropsPlaced = this.state.cropsPlaced;
 		var counts = {};
@@ -422,6 +422,7 @@ class Garden extends React.Component {
 				amounts[cropType] = [minAmount, maxAmount];
 			}, 500);
 		}
+       
     }
     render() {
         return (
@@ -430,7 +431,7 @@ class Garden extends React.Component {
                
                 
                 
-                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll"}}>{this.state.cropSelects}</div>
+                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all"}}>{this.state.cropSelects}</div>
                 <button onClick={this.activateEditing} className="div button"
                     style={{
                         width: "200px",
@@ -468,7 +469,7 @@ class Garden extends React.Component {
                 
                 <div>{this.state.plants}</div>
                 <div style={{position:"absolute",width:"2px",height:"100%",left:"75%",top:"0%",backgroundColor:"rgba(0,0,0,0.2)"}}></div>
-                <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>Select A Plant</div>
+                <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>{this.state.editingStyle.opacity=="1"?"Select A Plant":"Plant Yields"}</div>
             </>
         );
     }
