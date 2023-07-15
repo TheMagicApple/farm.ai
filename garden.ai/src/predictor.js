@@ -94,61 +94,16 @@ function _getWeatherEndpoint(lat, lon) {
  * @param lat  the latitude for the request.
  * @parma lon  the longitude for the request.
  */
-function _sendRequest(lat, lon) {
+async function getWeatherData(lat, lon) {
 	var endpoint = _getWeatherEndpoint(lat, lon);
-	return fetch(endpoint)
-	    .then((response) => {
-			return response.json().then((data) => {
-				return data;
-			}).catch(error => {
-				console.log(error);
-			});
-		});
-}
 
-
-/**
- * Gets the current local temperature for a lat/lon position.
- *
- * @param lat  the latitude for the request.
- * @parma lon  the longitude for the request.
- *
- * @return the local temperature. Upon any error, negative infinity is returned.
- */
-function averageLocalTemp(lat, lon) {
-	if (apiKey == "")
-		return Number.NEGATIVE_INFINITY;
-
-	var response;
-	_sendRequest(lat, lon).then((data) => {
-		response = data;
-	});
-	return response.main.temp;
-}
-
-
-/**
- * Gets the current local humidity for a lat/lon position.
- *
- * @param lat  the latitude for the request.
- * @parma lon  the longitude for the request.
- *
- * @return the local humidity in the range [0, 100]. Upon any error, -1 is returned.
- */
-function averageLocalHum(lat, lon) {
-	if (apiKey == "")
-		return -1;
-
-	var response;
-	_sendRequest(lat, lon).then((data) => {
-		response = data;
-	});
-	return response.main.humidity;
+	var response = await fetch(endpoint);
+	var data = await response.json();
+	return data;
 }
 
 
 module.exports = {
 	daysToMaturity,
-	averageLocalTemp,
-	averageLocalHum
+	getWeatherData
 }

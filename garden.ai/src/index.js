@@ -42,7 +42,11 @@ function main() {
 	var predictor = require("./predictor.js");
 	var lat = coordinates[0];
 	var lon = coordinates[1];
-	alert(predictor.averageLocalTemp(lat, lon));
+	/*
+	predictor.getWeatherData(lat, lon).then(data => {
+		alert("temp=" + data.main.temp + ", humidity=" + data.main.humidity);
+	});
+	*/
 }
 
 
