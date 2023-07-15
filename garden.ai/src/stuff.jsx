@@ -205,7 +205,7 @@ class Garden extends React.Component {
         }
         var cropSelects=[];
         for(let i=0;i<crops.length;i++){
-            cropSelects.push(<CropSelector left="90%" top={i*15+"%"} width="100px" height="100px" cropName={crops[i]}/>)
+            cropSelects.push(<CropSelector left="90%" top={5+i*20+"%"} width="100px" height="100px" cropName={crops[i]}/>)
         }
         this.state = {
             soilBlocks: soilBlocks,
@@ -290,6 +290,8 @@ class Garden extends React.Component {
     render() {
         return (
             <>
+               <Timeline></Timeline>
+
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
                 <div>{this.state.plants}</div>
                 <div>{this.state.cropSelects}</div>
@@ -351,6 +353,7 @@ class CropSelector extends React.Component {
     }
     render() {
             return <>
+                <div style={{position:"absolute", left:"calc("+this.props.left+" - "+this.props.width+" / 2)",top:"calc("+this.props.top+" + 0px)",width:"calc("+this.props.width+" * 2)",height:"calc("+this.props.height+" * 1.5)",border:"2px solid rgba(0,0,0,0.1)",borderRadius:"30px"}}></div>
                 <img
                     src={require("./asset/" + this.props.cropName+".png")}
                     style={{
@@ -366,11 +369,65 @@ class CropSelector extends React.Component {
                     left:"calc("+this.props.left+" - "+this.props.width+" / 2)",
                     top:"calc("+this.props.top+" + 70px)",
                     textAlign:"center",
-                    width:"calc("+this.props.width+" * 2)"
-
+                    width:"calc("+this.props.width+" * 2)",
+                    fontFamily: "'Open Sans', sans-serif",
+                    color:"rgba(0,0,0,0.6)"
                 }}>{this.props.cropName}</h1>
             </>
+    
+    }
+}
 
+class Timeline extends React.Component {
+    constructor(props) {
+        super(props);
+        let maxTime = 0;
+        /*for (let i=0; i<plants.length; i++) {
+            if (predict(plants[i]) > maxTime) {
+                maxTime = predict(plants[i]); // number of days
+            }
+        }*/
+    }
+
+
+    render() {
+        return (
+            <>
+                <hr
+                    style={{
+                        color:"red",
+                    }}
+                />
+                <CropMarker left="50%"></CropMarker>
+            </>
+        );
+    }
+}
+
+class CropMarker extends React.Component { // marker that displays grop range in timeline
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <>
+            <div style={{ 
+            position:"absolute",
+            left:this.props.left, 
+            height: "10px",
+            width: "2px",
+            "background-color": "red",
+        }}>
+
+        </div>
+        <div style={{
+            position:"absolute",
+            left:this.props.left,
+        }}>
+            {this.props.cropName}: props.time
+        </div>
+            </>
+        )
     }
 }
 
