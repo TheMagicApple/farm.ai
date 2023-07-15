@@ -394,10 +394,10 @@ class Garden extends React.Component {
         this.setState({ plants, plantPositions,cropsPlaced});
     }
     activateEditing(){
-        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1",display:"block"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0",display:"none"},});
+        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},});
     }
     activateManaging(){
-        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0",display:"none"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1",display:"block"},});
+        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},});
 
 		var cropsPlaced = this.state.cropsPlaced;
 		var counts = {};
@@ -418,47 +418,31 @@ class Garden extends React.Component {
                 var cropTime = answer.time;
                 times[cropType] = [cropTime - 5, cropTime + 5];
                     
-                var cropAmountStr = answer.amount;
-                cropAmountStr = cropAmountStr.substring(0, cropAmountStr.length - 3);
-                var amountSplit = cropAmountStr.split("-");
-                var minAmount = parseFloat(amountSplit[0]) * cropCount;
-                var maxAmount = parseFloat(amountSplit[1]) * cropCount;
+                var minAmount = Math.round(answer.amount.min * cropCount * 10) / 10;
+				var maxAmount = Math.round(answer.amount.max * cropCount * 10) / 10;
                 amounts[cropType] = [minAmount, maxAmount];	
             }
         
             var already=[];
             var cropPredictions=[];
-            var cropColors={"Honeydew": "d9df95", "Kale": "a8c470", "Raspberry": "e88e8e", "Peach": "852227", "Cauliflower": "e2d9c1", "Zucchini": "427a15", "Tomatillo": "6c826d", "Squash": "f4981d", "Potato": "835420", "Bell Pepper": "fe352b", "Carrot": "c33f00", "Parsley": "e3ffe3", "Blueberry": "424e7e", "Pineapple": "ffba38", "Watercress": "808080", "Celery": "94c132", "Artichoke": "3d6038", "Cantaloupe": "be7e3b", "Green Bean": "ffffdb", "Mango": "fcd62d", "Mint": "5caa57", "Onion": "c37f43", "Tomato": "f73d4a", "Asparagus": "729d58", "Watermelon": "90110b", "Cherry": "aa9e74", "Grapes": "94ff63", "Pomegranate": "f40022", "Cilantro": "e3ffe3", "Green Onion": "fffff4", "Rhubarb": "7c995c", "soil": "444440", "Garlic": "ffffc6", "Pear": "cacc13", "Peas": "2b402b", "Brussels": "abc756", "Lima Beans": "e0d4ba", "Cucumber": "7aac2f", "Eggplant": "4d227e", "Spinach": "ffffe6", "Collard Greens": "444b29", "Cabbage": "87e3cc", "Beetroot": "fc4c61", "Strawberry": "f63937", "Lettuce": "8bb164", "Sweet Corn": "d9c53e", "Pumpkin": "b74722", "Radish": "83191b", "Kiwi": "d69f38", "Turnip": "ceba95", "Broccoli": "119e4b"};
-            var counter=0;
             for(let i=0;i<this.state.cropsPlaced.length;i++){
                 if(!already.includes(this.state.cropsPlaced[i])){
-                    var text="white";
-                    if(this.getBrightness(cropColors[this.state.cropsPlaced[i]])>175){
-                        text="black";
-                    }
-                    cropPredictions.push(<CropPrediction left="81%" top={(10+counter*17)+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]} cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]} text={text}/>);
+                    cropPredictions.push(<CropPrediction left="80%" top={(10+i*17)+"%"} backgroundColor="#F73D4A" cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]}/>);
                     already.push(this.state.cropsPlaced[i]);
-                    counter++;
                 }
             }
             this.setState({cropPredictions});
         });
     }
-    getBrightness(hexColor) {
-        hexColor = hexColor.replace("#", "");
-        var r = parseInt(hexColor.substring(0, 2), 16);
-        var g = parseInt(hexColor.substring(2, 4), 16);
-        var b = parseInt(hexColor.substring(4, 6), 16);
-        return ((r * 299) + (g * 587) + (b * 114)) / 1000;
-      }
+    
     render() {
         return (
             <>
                {<Timeline></Timeline>}
                
                 
-               <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all",display:this.state.managingStyle.display}}>{this.state.cropPredictions}</div>
-                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all",display:this.state.editingStyle.display}}>{this.state.cropSelects}</div>
+               <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all"}}>{this.state.cropPredictions}</div>
+                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all"}}>{this.state.cropSelects}</div>
                 <button onClick={this.activateEditing} className="div button"
                     style={{
                         width: "200px",
@@ -510,9 +494,9 @@ class CropPrediction extends React.Component{
         return  <>
                     <div style={{position:"absolute",left:this.props.left,top:this.props.top,width:"15%",height:"15%",backgroundColor:this.props.backgroundColor,borderRadius:"5px"}}>
                         <img style={{backgroundColor:"white",position:"absolute",width:"100px",height:"100px",left:"7%",top:"10%",borderRadius:"10px"}}src={require("./asset/"+this.props.cropName+".png")}/>
-                        <div className="div" style={{width:"150px",left:"-2%",fontSize:"20px",color:this.props.text,top:"80%"}}><b>{this.props.cropName}</b></div>
-                        <div className="div" style={{width:"60%",left:"40%",fontSize:"40px",color:this.props.text,top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
-                        <div style={{position:"absolute",left:"63%",fontSize:"30px",color:this.props.text,top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
+                        <div className="div" style={{width:"100px",left:"7%",fontSize:"20px",color:"white",top:"80%"}}><b>{this.props.cropName}</b></div>
+                        <div className="div" style={{width:"60%",left:"40%",fontSize:"40px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
+                        <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
                     </div>
                 </>
     }

@@ -70,6 +70,15 @@ function _daysToMaturity(plantType, localTemp, localHum, daysGrowing = 0) {
 }
 
 
+function _amountPenalty(idealTemp, idealHum, localTemp, localHum) {
+	var tempDiff = Math.abs(idealTemp - localTemp);
+	var humDiff = Math.abs(idealHum - localHum);
+
+	var totalDiff = tempDiff + humDiff;
+	return 1 - (totalDiff) / 200;
+}
+
+
 /**
  * Return the expected yield from a particular plant as a range in kilograms.
  *
@@ -79,12 +88,21 @@ function _daysToMaturity(plantType, localTemp, localHum, daysGrowing = 0) {
  * @return the kilogram range for the expected yield of this plant. If the plantType is undefined
  *         in the plantJSON map, then the string "Unknown" is returned.
  */
-function _getAmountYield(plantType) {
+function _getAmountYield(plantType, localTemp, localHum) {
 	if (!(plantType in plantJSON))
 		return "Unknown";
 	var plantInfo = plantJSON[plantType];
+	var idealTemp = plantInfo["temp"];
+	var idealHum = plantInfo["hum"];
 
-	return plantInfo["wt"];
+	var plantAmountStr = plantInfo["wt"];
+    plantAmountStr = plantAmountStr.substring(0, plantAmountStr.length - 3);
+    var amountSplit = plantAmountStr.split("-");
+    var minAmount = parseFloat(amountSplit[0]);
+	var maxAmount = parseFloat(amountSplit[1]);
+
+	var penalty = _amountPenalty(idealTemp, idealHum, localTemp, localHum);
+	return {min: minAmount * penalty, max: maxAmount * penalty};
 }
 
 
@@ -124,7 +142,7 @@ function predict(type, daysGrowing = 0) {
 		return undefined;
 	
 	var time = _daysToMaturity(type, temp, hum, daysGrowing);
-	var amount = _getAmountYield(type);
+	var amount = _getAmountYield(type, temp, hum);
 	return {time: time, amount: amount};
 }
 
