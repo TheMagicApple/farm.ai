@@ -434,13 +434,20 @@ class Garden extends React.Component {
                         text="black";
                     }
                     cropPredictions.push(<CropPrediction left="81%" top={(10+counter*17)+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]} cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]} text={text}/>);
+                    counter++;
                     already.push(this.state.cropsPlaced[i]);
                 }
             }
             this.setState({cropPredictions});
         });
     }
-    
+    getBrightness(hexColor) {
+        hexColor = hexColor.replace("#", "");
+        var r = parseInt(hexColor.substring(0, 2), 16);
+        var g = parseInt(hexColor.substring(2, 4), 16);
+        var b = parseInt(hexColor.substring(4, 6), 16);
+        return ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      }
     render() {
         return (
             <>
