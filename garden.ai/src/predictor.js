@@ -75,7 +75,7 @@ function _daysToMaturity(plantType, localTemp, localHum, daysGrowing = 0) {
 // **********                          User Access Point                           **********
 // ******************************************************************************************
 
-const weatherAPIKey = ""; // API key for openweathermap.org here
+const weatherAPIKey = "f44ef2b3d440d65be2ab9aea193294d9"; // API key for openweathermap.org here
 
 // Data defined by the initialize routine. All these will be defined with values once
 // initialized is set to true. This also happens at the same time as the call
