@@ -40,11 +40,11 @@ class Home extends React.Component {
                 "Squash",
                 "Artichoke",
                 "Asparagus",
-                "Brussels Sprouts",
+                "Brussels",
                 "Celery",
                 "Collard Greens",
                 "Green Onion",
-                "Honeydew Melon",
+                "Honeydew",
                 "Kiwi",
                 "Lima Beans",
                 "Mango",
@@ -166,11 +166,11 @@ class Garden extends React.Component {
             "Squash",
             "Artichoke",
             "Asparagus",
-            "Brussels Sprouts",
+            "Brussels",
             "Celery",
             "Collard Greens",
             "Green Onion",
-            "Honeydew Melon",
+            "Honeydew",
             "Kiwi",
             "Lima Beans",
             "Mango",
@@ -187,7 +187,7 @@ class Garden extends React.Component {
         var soilBlocks = [];
         var soilPositions = [];
         var gardenSize = 6;
-        var x = 5;
+        var x = 3;
         var y = 40;
         for (let i = 0; i < gardenSize; i++) {
             var soilPosition = [];
@@ -200,12 +200,14 @@ class Garden extends React.Component {
                 y += 7;
             }
             soilPositions.push(soilPosition);
-            x = 5 + (i + 1) * 6;
+            x = 3 + (i + 1) * 6;
             y = 40 - (i + 1) * 7;
         }
         var cropSelects=[];
         for(let i=0;i<crops.length;i++){
-            cropSelects.push(<CropSelector left="90%" top={5+i*20+"%"} width="100px" height="100px" cropName={crops[i]}/>)
+            var left="80%";
+            if(i%2==1) left="91.5%"
+            cropSelects.push(<CropSelector left={left} top={3+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]}/>)
         }
         this.state = {
             soilBlocks: soilBlocks,
@@ -247,9 +249,9 @@ class Garden extends React.Component {
             }
         }
         if (alreadyPlanted) {
-            var plantX = 5;
+            var plantX = 3;
             var plantY = 40;
-            plantX = 5 + minSoil[0] * 6;
+            plantX = 3 + minSoil[0] * 6;
             plantY = 40 - minSoil[0] * 7;
             plantX += 6 * minSoil[1];
             plantY += 7 * minSoil[1];
@@ -263,9 +265,9 @@ class Garden extends React.Component {
             plants.splice(index);
             plantPositions.splice(plantPositions.indexOf(minSoil));
         } else {
-            var plantX = 5;
+            var plantX = 3;
             var plantY = 40;
-            plantX = 5 + minSoil[0] * 6;
+            plantX = 3 + minSoil[0] * 6;
             plantY = 40 - minSoil[0] * 7;
             plantX += 6 * minSoil[1];
             plantY += 7 * minSoil[1];
@@ -291,10 +293,10 @@ class Garden extends React.Component {
         return (
             <>
                <Timeline></Timeline>
-
+                <div style={{position:"absolute",height:"100%",width:"100%",overflow:"scroll"}}>{this.state.cropSelects}</div>
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
                 <div>{this.state.plants}</div>
-                <div>{this.state.cropSelects}</div>
+                
             </>
         );
     }
@@ -359,7 +361,7 @@ class CropSelector extends React.Component {
                     style={{
                         position: "absolute",
                         left: this.props.left,
-                        top: this.props.top,
+                        top: "calc("+this.props.top+" + 10px)",
                         width: this.props.width,
                         height: this.props.height,
                     }}
@@ -367,11 +369,12 @@ class CropSelector extends React.Component {
                 <h1 style = {{
                     position:"absolute",
                     left:"calc("+this.props.left+" - "+this.props.width+" / 2)",
-                    top:"calc("+this.props.top+" + 70px)",
+                    top:"calc("+this.props.top+" + 90px)",
                     textAlign:"center",
                     width:"calc("+this.props.width+" * 2)",
                     fontFamily: "'Open Sans', sans-serif",
-                    color:"rgba(0,0,0,0.6)"
+                    color:"rgba(0,0,0,1)",
+                    fontSize:"25px",
                 }}>{this.props.cropName}</h1>
             </>
     
