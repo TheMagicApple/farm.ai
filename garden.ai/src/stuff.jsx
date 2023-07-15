@@ -322,6 +322,7 @@ class Garden extends React.Component {
             }
         }
         if (alreadyPlanted) {
+            //alert("ALREADY PLANTED");
             var plantX = 3;
             var plantY = 40;
             plantX = 3 + minSoil[0] * 6;
@@ -336,7 +337,15 @@ class Garden extends React.Component {
                 }
             }
             plants.splice(index,1);
-            plantPositions.splice(plantPositions.indexOf(minSoil));
+            var index2=0;
+            for(let i=0;i<plantPositions.length;i++){
+                if(plantPositions[i][0]==minSoil[0] && plantPositions[i][1]==minSoil[1]){
+                    index2=i;
+                    break;
+                }
+            }
+           // alert(plantPositions[plantPositions.indexOf(minSoil)]);
+            plantPositions.splice(index2,1);
         } else {
             var plantX = 3;
             var plantY = 40;
