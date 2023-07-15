@@ -286,4 +286,31 @@ class SoilBlock extends React.Component {
     }
 }
 
+class CropSelector extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+            <>
+                <img
+                    src={require("./asset/" + this.props.imagePath)}
+                    style={{
+                        position: "absolute",
+                        left: this.props.left,
+                        top: this.props.top,
+                        width: this.props.width,
+                        height: this.props.height,
+                        filter: "contrast(70%)",
+                    }}
+                />
+                <h1 style = {{
+                    position:"absolute",
+                    left:this.props.left,
+                    top:this.props.top
+                }}>{this.props.cropName}</h1>
+            </>
+
+    }
+}
+
 export { Home, Garden };
