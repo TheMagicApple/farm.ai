@@ -66,15 +66,7 @@ class Home extends React.Component {
       var delay = Math.random() * 10;
       var fallDuration = Math.random() * 5 + 3;
       var spinDuration = Math.random() * 3 + 1;
-      fallingFruit.push(
-        <FallingFruit
-          image={this.state.fruit[i] + ".png"}
-          left={i * 2 + "%"}
-          delay={delay + "s"}
-          fallDuration={fallDuration + "s"}
-          spinDuration={spinDuration + "s"}
-        />
-      );
+      fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={i * 2 + "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"}/>);
     }
     this.setState({ fallingFruit });
   }
@@ -207,7 +199,7 @@ class Garden extends React.Component {
         plants.indexOf(
           <img
             className="gardenFood"
-            src={require("./Tomato.png")}
+            src={require("./asset/Tomato.png")}
             style={{
               width: "100px",
               height: "100px",
@@ -229,7 +221,7 @@ class Garden extends React.Component {
       plants.push(
         <img
           className="gardenFood"
-          src={require("./Tomato.png")}
+          src={require("./asset/Tomato.png")}
           style={{
             width: "100px",
             height: "100px",
@@ -262,7 +254,7 @@ class FallingFruit extends React.Component {
       <>
         <img
           className="fallingFruit"
-          src={require("./" + this.props.image)}
+          src={require("./asset/" + this.props.image)}
           style={{
             left: this.props.left,
             animationDelay: this.props.delay,
@@ -286,7 +278,7 @@ class SoilBlock extends React.Component {
     return (
       <>
         <img
-          src={require("./soil.png")}
+          src={require("./asset/soil.png")}
           style={{
             position: "absolute",
             left: this.props.left,
