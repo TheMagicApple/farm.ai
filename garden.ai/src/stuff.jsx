@@ -131,6 +131,59 @@ class Home extends React.Component {
 class Garden extends React.Component {
     constructor(props) {
         super(props);
+        var crops=[
+            "Tomato",
+            "Carrot",
+            "Lettuce",
+            "Cucumber",
+            "Spinach",
+            "Bell Pepper",
+            "Broccoli",
+            "Cabbage",
+            "Onion",
+            "Strawberry",
+            "Potato",
+            "Zucchini",
+            "Green Bean",
+            "Radish",
+            "Watermelon",
+            "Pumpkin",
+            "Sweet Corn",
+            "Cauliflower",
+            "Eggplant",
+            "Cilantro",
+            "Cantaloupe",
+            "Garlic",
+            "Kale",
+            "Peas",
+            "Beetroot",
+            "Raspberry",
+            "Blueberry",
+            "Mint",
+            "Parsley",
+            "Cherry",
+            "Grapes",
+            "Squash",
+            "Artichoke",
+            "Asparagus",
+            "Brussels Sprouts",
+            "Celery",
+            "Collard Greens",
+            "Green Onion",
+            "Honeydew Melon",
+            "Kiwi",
+            "Lima Beans",
+            "Mango",
+            "Peach",
+            "Pear",
+            "Pineapple",
+            "Pomegranate",
+            "Rhubarb",
+            "Tomatillo",
+            "Turnip",
+            "Watercress",
+        ];
+        
         var soilBlocks = [];
         var soilPositions = [];
         var gardenSize = 6;
@@ -150,11 +203,16 @@ class Garden extends React.Component {
             x = 5 + (i + 1) * 6;
             y = 40 - (i + 1) * 7;
         }
+        var cropSelects=[];
+        for(let i=0;i<crops.length;i++){
+            cropSelects.push(<CropSelector left="90%" top={i*15+"%"} width="100px" height="100px" cropName={crops[i]}/>)
+        }
         this.state = {
             soilBlocks: soilBlocks,
             soilPositions: soilPositions,
             plants: [],
             plantPositions: [],
+            cropSelects:cropSelects,
         };
         this.placeFruit = this.placeFruit.bind(this);
     }
@@ -234,6 +292,7 @@ class Garden extends React.Component {
             <>
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
                 <div>{this.state.plants}</div>
+                <div>{this.state.cropSelects}</div>
             </>
         );
     }
@@ -291,22 +350,24 @@ class CropSelector extends React.Component {
         super(props);
     }
     render() {
-            <>
+            return <>
                 <img
-                    src={require("./asset/" + this.props.imagePath)}
+                    src={require("./asset/" + this.props.cropName+".png")}
                     style={{
                         position: "absolute",
                         left: this.props.left,
                         top: this.props.top,
                         width: this.props.width,
                         height: this.props.height,
-                        filter: "contrast(70%)",
                     }}
                 />
                 <h1 style = {{
                     position:"absolute",
-                    left:this.props.left,
-                    top:this.props.top
+                    left:"calc("+this.props.left+" - "+this.props.width+" / 2)",
+                    top:"calc("+this.props.top+" + 70px)",
+                    textAlign:"center",
+                    width:"calc("+this.props.width+" * 2)"
+
                 }}>{this.props.cropName}</h1>
             </>
 
