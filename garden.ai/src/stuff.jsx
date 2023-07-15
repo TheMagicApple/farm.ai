@@ -184,7 +184,7 @@ class Garden extends React.Component {
             "Turnip",
             "Watercress",
         ];
-
+        crops.sort();
         this.selectCrop=this.selectCrop.bind(this);
         
         var soilBlocks = [];
@@ -221,8 +221,18 @@ class Garden extends React.Component {
             cropSelected:"Tomato",
             selectX:"",
             selectY:"",
+            predictAnswer:"",
+            cropsPlaced:[],
         };
         this.placeFruit = this.placeFruit.bind(this);
+        
+    }
+    predictTime(cropName){
+        var predictor = require("./predictor.js");
+        predictor.initialize(() => {
+            var answer=predictor.predict(cropName, 0);
+            this.setState({predictAnswer:answer});
+        });
     }
     selectCrop(event,cropName){
         var crops=[
@@ -277,7 +287,7 @@ class Garden extends React.Component {
             "Turnip",
             "Watercress",
         ];
-
+        crops.sort();
         var cropSelects=[];
         for(let i=0;i<crops.length;i++){
             var left="80%";
@@ -286,7 +296,8 @@ class Garden extends React.Component {
             else cropSelects.push(<CropSelector onClick={this.selectCrop} left={left} top={9+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]} border="2px solid rgba(0,0,0,0.1)"/>);
         }
 
-       
+        this.predictTime(cropName);
+        setTimeout(() => {alert(Math.round(this.state.predictAnswer.time)+" "+this.state.predictAnswer.amount);}, 500);
         
         this.setState({cropSelected:cropName,cropSelects});
         
@@ -312,6 +323,7 @@ class Garden extends React.Component {
         
         var plants = this.state.plants;
         var plantPositions = this.state.plantPositions;
+        var cropsPlaced=this.state.cropsPlaced;
         var alreadyPlanted = false;
         for (let i = 0; i < plantPositions.length; i++) {
             if (
@@ -337,6 +349,7 @@ class Garden extends React.Component {
                     break;
                 }
             }
+            cropsPlaced.splice(cropsPlaced.indexOf(plants[index].props.cropName),1);
             plants.splice(index,1);
             var index2=0;
             for(let i=0;i<plantPositions.length;i++){
@@ -345,6 +358,7 @@ class Garden extends React.Component {
                     break;
                 }
             }
+           
             plantPositions.splice(index2,1);
         } else {
             var plantX = 3;
@@ -356,6 +370,7 @@ class Garden extends React.Component {
             plants.push(
                 <img
                     className="gardenFood"
+                    cropName={this.state.cropSelected} 
                     src={require("./asset/"+this.state.cropSelected+".png")}
                     style={{
                         width: "100px",
@@ -367,15 +382,15 @@ class Garden extends React.Component {
                 />
             );
             plantPositions.push(minSoil);
+            cropsPlaced.push(this.state.cropSelected);
         }
-
-        this.setState({ plants, plantPositions});
+        this.setState({ plants, plantPositions,cropsPlaced});
     }
     render() {
         return (
             <>
                {/*<Timeline></Timeline>*/}
-                <div style={{position:"absolute",height:"100%",width:"100%",overflow:"scroll"}}>{this.state.cropSelects}</div>
+                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll"}}>{this.state.cropSelects}</div>
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
                 
                 <div>{this.state.plants}</div>

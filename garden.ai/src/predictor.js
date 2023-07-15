@@ -195,6 +195,7 @@ function _getWeatherEndpoint() {
 
 
 // Open the initialize and predict methods to import access.
+
 module.exports = {
 	initialize,
 	predict
