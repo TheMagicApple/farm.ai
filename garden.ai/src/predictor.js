@@ -70,6 +70,15 @@ function _daysToMaturity(plantType, localTemp, localHum, daysGrowing = 0) {
 }
 
 
+/**
+ * Return the expected yield from a particular plant as a range in kilograms.
+ *
+ * @param plantType  the type of the plant. This must be one of the keys of the {@code plantJSON}
+ *                   hashmap.
+ *
+ * @return the kilogram range for the expected yield of this plant. If the plantType is undefined
+ *         in the plantJSON map, then the string "Unknown" is returned.
+ */
 function _getAmountYield(plantType) {
 	if (!(plantType in plantJSON))
 		return "Unknown";
