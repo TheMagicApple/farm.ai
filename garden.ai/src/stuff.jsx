@@ -214,7 +214,7 @@ class Garden extends React.Component {
         }
         this.state = {
             soilBlocks: soilBlocks,
-            soilPositions: soilPositions,
+            soilPositions: soilPositions, 
             plants: [],
             plantPositions: [],
             cropSelects:cropSelects,
@@ -394,6 +394,34 @@ class Garden extends React.Component {
     }
     activateManaging(){
         this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},});
+
+		var cropsPlaced = this.state.cropsPlaced;
+		var counts = {};
+		for (var i = 0; i < cropsPlaced.length; i++) {
+			var cropType = cropsPlaced[i];
+			if (!(cropType in counts))
+				counts[cropType] = cropsPlaced.filter((v) => (v === cropType)).length;
+		}
+		
+		var amounts = {};
+		var times = {};
+		for (var i = 0; i < Object.keys(counts).length; i++) {
+			var cropType = Object.keys(counts)[i];
+			var cropCount = counts[cropType];
+			
+			this.predictTime(cropType);
+			setTimeout(() => {
+				var cropTime = this.state.predictAnswer.time;
+				times[cropType] = [cropTime - 5, cropTime + 5];
+				
+				var cropAmountStr = this.state.predictAnswer.amount;
+				cropAmountStr = cropAmountStr.substring(0, cropAmountStr.length - 3);
+				var amountSplit = cropAmountStr.split("-");
+				var minAmount = parseFloat(amountSplit[0]) * cropCount;
+				var maxAmount = parseFloat(amountSplit[1]) * cropCount;
+				amounts[cropType] = [minAmount, maxAmount];
+			}, 500);
+		}
     }
     render() {
         return (
