@@ -10,11 +10,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-
-
-var predictor = require("./predictor.js");
-predictor.initialize(() => {
-	var result = predictor.predict("Tomato");
-	alert("Your plant will be ready in " + result.time + " days and will yield " + result.amount);	
-});
