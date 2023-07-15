@@ -48,7 +48,7 @@ class Garden extends React.Component{
             x=5+(i+1)*6;
             y=40-(i+1)*7;
         }
-        this.state={soilBlocks:soilBlocks,soilPositions:soilPositions,plants:[]};
+        this.state={soilBlocks:soilBlocks,soilPositions:soilPositions,plants:[],plantPositions:[]};
         this.placeFruit=this.placeFruit.bind(this);
     }
     placeFruit(event){
@@ -68,17 +68,38 @@ class Garden extends React.Component{
                 }
             }
         }
-        var plantX=5;
-        var plantY=40;
+   
         var plants=this.state.plants;
-
-        plantX=5+(minSoil[0])*6;
-        plantY=40-(minSoil[0])*7;
-        plantX+=6*minSoil[1];
-        plantY+=7*minSoil[1];
-        plants.push(<img className="gardenFood" src={require('./Tomato.png')} style={{width:"100px",height:"100px",position:"absolute",left:(plantX+2.5)+"%",top:(plantY-5)+"%"}}/>);
+        var plantPositions=this.state.plantPositions;
+        var alreadyPlanted=false;
+        for(let i=0;i<plantPositions.length;i++){
+            if(plantPositions[i][0]==minSoil[0] && plantPositions[i][1]==minSoil[1]){
+                alreadyPlanted=true;
+                break;
+            }
+        }
+        if(alreadyPlanted){
+            var plantX=5;
+            var plantY=40;
+            plantX=5+(minSoil[0])*6;
+            plantY=40-(minSoil[0])*7;
+            plantX+=6*minSoil[1];
+            plantY+=7*minSoil[1];
+            plants.splice(plants.indexOf(<img className="gardenFood" src={require('./Tomato.png')} style={{width:"100px",height:"100px",position:"absolute",left:(plantX+2.5)+"%",top:(plantY-5)+"%"}}/>));
+            plantPositions.splice(plantPositions.indexOf(minSoil));
+        }else{
+            var plantX=5;
+            var plantY=40;
+            plantX=5+(minSoil[0])*6;
+            plantY=40-(minSoil[0])*7;
+            plantX+=6*minSoil[1];
+            plantY+=7*minSoil[1];
+            plants.push(<img className="gardenFood" src={require('./Tomato.png')} style={{width:"100px",height:"100px",position:"absolute",left:(plantX+2.5)+"%",top:(plantY-5)+"%"}}/>);
+            plantPositions.push(minSoil);
+        }
+       
         
-        this.setState({plants:plants});
+        this.setState({plants,plantPositions});
     }
     render(){
         return  <>
