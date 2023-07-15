@@ -69,32 +69,81 @@ function daysToMaturity(plantType, localTemp, localHum, daysGrowing = 0) {
 }
 
 
+/**
+ * Format the OpenWeatherMap endpoint URL for API access.
+ *
+ * @param lat  the latitude for the request.
+ * @parma lon  the longitude for the request.
+ *
+ * @return a formatted URL which the api request can be sent to.
+ */
 function _getWeatherEndpoint(lat, lon) {
-	return `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+	return "https://api.openweathermap.org/data/2.5/weather?" +
+		"lat=" + lat + "&" +
+		"lon=" + lon + "&" +
+		"units=metric&" +
+		"appid=" + apiKey;
 }
 
 
+/**
+ * Sends an API request for weather information.
+ *
+ * Source: https://stackoverflow.com/questions/47604040/how-to-get-data-returned-from-fetch-promise
+ *
+ * @param lat  the latitude for the request.
+ * @parma lon  the longitude for the request.
+ */
+function _sendRequest(lat, lon) {
+	var endpoint = _getWeatherEndpoint(lat, lon);
+	return fetch(endpoint)
+	    .then((response) => {
+			return response.json().then((data) => {
+				return data;
+			}).catch(error => {
+				console.log(error);
+			});
+		});
+}
+
+
+/**
+ * Gets the current local temperature for a lat/lon position.
+ *
+ * @param lat  the latitude for the request.
+ * @parma lon  the longitude for the request.
+ *
+ * @return the local temperature. Upon any error, negative infinity is returned.
+ */
 function averageLocalTemp(lat, lon) {
 	if (apiKey == "")
-		return 0;
-	
-	var endpoint = _getWeatherEndpoint(lat, lon);
+		return Number.NEGATIVE_INFINITY;
 
-	var temp;
-	fetch(endpoint)
-		.then(response => response.json())
-	    .then(data => {
-			console.log(data);
-			temp = data.main.temp;
-		})
-	    .catch(error => console.log(error));
-	return temp;
+	var response;
+	_sendRequest(lat, lon).then((data) => {
+		response = data;
+	});
+	return response.main.temp;
 }
 
 
+/**
+ * Gets the current local humidity for a lat/lon position.
+ *
+ * @param lat  the latitude for the request.
+ * @parma lon  the longitude for the request.
+ *
+ * @return the local humidity in the range [0, 100]. Upon any error, -1 is returned.
+ */
 function averageLocalHum(lat, lon) {
-	var endpoint = _getWeatherEndpoint(lat, lon);
-	
+	if (apiKey == "")
+		return -1;
+
+	var response;
+	_sendRequest(lat, lon).then((data) => {
+		response = data;
+	});
+	return response.main.humidity;
 }
 
 
