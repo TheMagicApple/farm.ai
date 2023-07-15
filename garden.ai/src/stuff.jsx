@@ -1,3 +1,4 @@
+import { toHaveAccessibleDescription } from "@testing-library/jest-dom/matchers.js";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -225,6 +226,9 @@ class Garden extends React.Component {
             cropsPlaced:[],
             editingStyle:{color: "white",backgroundColor: "#00affa",border:"none",opacity:"1"},
             managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},
+            cropTypes:[], //sample data
+            cropTimes:[], //also sample data
+            dayPx:0, //day to pixels ratio for timeline
             cropPredictions:[],
         };
         this.placeFruit = this.placeFruit.bind(this);
@@ -437,7 +441,7 @@ class Garden extends React.Component {
     render() {
         return (
             <>
-               {/*<Timeline></Timeline>*/}
+               {<Timeline></Timeline>}
                
                 
                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all"}}>{this.state.cropPredictions}</div>
@@ -589,33 +593,42 @@ class CropSelector extends React.Component {
 class Timeline extends React.Component {
     constructor(props) {
         super(props);
-        let maxTime = 0;
-        /*for (let i=0; i<plants.length; i++) {
-            predictor.initialize(() => {
-            predictor.predict("Tomato", daysGrowing = 4);
-            if (predictor.predict(plants[i]) > maxTime) {
-                maxTime = predictictor.predict(plants[i]); // number of days
-            }
-
-        });
-
-        }
-        var TIMELINE_SIZE = 700 //px
-        var dayPx = maxTime/TIMELINE_SIZE // each day is x px on timeline
-        */
-       var dayPx = 99999; //for testing
     }
 
 
     render() {
+        //alert(maxTime);
+
+        var maxTime = 20; // time in days
+
+        //GET THE TIME FOR EACH CROP THAT HAS BEEN PLANTED
+        //HOWHOWHOWHOWHOWHOW
+        //HOW
+        //WHERE IS IT
+
+        //sample data
+        var cropTypes = ["Blueberry", "Tomato"];
+        var cropTimes = [50, 40];
+        var TIMELINE_SIZE = 700; //px
+        var dayPx = maxTime/TIMELINE_SIZE; // each day is x px on timeline
+
+        var cropMarkers = [];
+        for (var i=0; i<cropTypes.length; i++) {
+            cropMarkers.push(
+                <CropMarker left={dayPx*cropTimes[i]}></CropMarker>
+            )
+        }
+
         return (
             <>
                 <hr
                     style={{
                         color:"red",
                     }}
+
                 />
                 <CropMarker  left="50%" dayPx={this.dayPx}></CropMarker>
+                {cropMarkers}
             </>
         );
     }
@@ -626,7 +639,7 @@ class CropMarker extends React.Component { // marker that displays grop range in
         super(props);
     }
     render() {
-        alert("PX"+ this.props.dayPx)
+        //alert("PX"+ this.props.dayPx)
         return (
             <>
             <div style={{ 
