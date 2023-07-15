@@ -425,9 +425,15 @@ class Garden extends React.Component {
         
             var already=[];
             var cropPredictions=[];
+            var cropColors={"Honeydew": "d9df95", "Kale": "a8c470", "Raspberry": "e88e8e", "Peach": "852227", "Cauliflower": "e2d9c1", "Zucchini": "427a15", "Tomatillo": "6c826d", "Squash": "f4981d", "Potato": "835420", "Bell Pepper": "fe352b", "Carrot": "c33f00", "Parsley": "e3ffe3", "Blueberry": "424e7e", "Pineapple": "ffba38", "Watercress": "808080", "Celery": "94c132", "Artichoke": "3d6038", "Cantaloupe": "be7e3b", "Green Bean": "ffffdb", "Mango": "fcd62d", "Mint": "5caa57", "Onion": "c37f43", "Tomato": "f73d4a", "Asparagus": "729d58", "Watermelon": "90110b", "Cherry": "ad0c00", "Grapes": "94ff63", "Pomegranate": "f40022", "Cilantro": "e3ffe3", "Green Onion": "fffff4", "Rhubarb": "7c995c", "soil": "444440", "Garlic": "ffffc6", "Pear": "cacc13", "Peas": "2b402b", "Brussels": "abc756", "Lima Beans": "e0d4ba", "Cucumber": "7aac2f", "Eggplant": "4d227e", "Spinach": "ffffe6", "Collard Greens": "444b29", "Cabbage": "87e3cc", "Beetroot": "fc4c61", "Strawberry": "f63937", "Lettuce": "8bb164", "Sweet Corn": "d9c53e", "Pumpkin": "b74722", "Radish": "83191b", "Kiwi": "d69f38", "Turnip": "ceba95", "Broccoli": "119e4b"};
+            var counter=0;
             for(let i=0;i<this.state.cropsPlaced.length;i++){
                 if(!already.includes(this.state.cropsPlaced[i])){
-                    cropPredictions.push(<CropPrediction left="80%" top={(10+i*17)+"%"} backgroundColor="#F73D4A" cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]}/>);
+                    var text="white";
+                    if(this.getBrightness(cropColors[this.state.cropsPlaced[i]])>185){
+                        text="black";
+                    }
+                    cropPredictions.push(<CropPrediction left="81%" top={(10+counter*17)+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]} cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]} text={text}/>);
                     already.push(this.state.cropsPlaced[i]);
                 }
             }
