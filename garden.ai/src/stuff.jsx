@@ -223,8 +223,12 @@ class Garden extends React.Component {
             selectY:"",
             predictAnswer:"",
             cropsPlaced:[],
+            editingStyle:{color: "white",backgroundColor: "#00affa",border:"none"},
+            managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},
         };
         this.placeFruit = this.placeFruit.bind(this);
+        this.activateEditing=this.activateEditing.bind(this);
+        this.activateManaging=this.activateManaging.bind(this);
         
     }
     predictTime(cropName){
@@ -335,7 +339,6 @@ class Garden extends React.Component {
             }
         }
         if (alreadyPlanted) {
-            //alert("ALREADY PLANTED");
             var plantX = 3;
             var plantY = 40;
             plantX = 3 + minSoil[0] * 6;
@@ -386,11 +389,53 @@ class Garden extends React.Component {
         }
         this.setState({ plants, plantPositions,cropsPlaced});
     }
+    activateEditing(){
+        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},});
+    }
+    activateManaging(){
+        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},});
+    }
     render() {
         return (
             <>
                {/*<Timeline></Timeline>*/}
+               
+                
+                
                 <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll"}}>{this.state.cropSelects}</div>
+                <button onClick={this.activateEditing} className="div button"
+                    style={{
+                        width: "200px",
+                        height: "40px",
+                        left: "2%",
+                        top: "3%",
+                        fontSize: "20px",
+                        color: this.state.editingStyle.color,
+                        backgroundColor: this.state.editingStyle.backgroundColor,
+                        borderRadius: "5px 0px 0px 5px",
+                        border:this.state.editingStyle.border,
+                    }}
+                >
+                    <b>Edit Garden</b>
+                </button>
+                <button onClick={this.activateManaging} className="div button"
+                    style={{
+                        width: "200px",
+                        height: "40px",
+                        left: "12.4%",
+                        top: "3%",
+                        fontSize: "20px",
+                        color: this.state.managingStyle.color,
+                        backgroundColor: this.state.managingStyle.backgroundColor,
+                        borderRadius: "0px 5px 5px 0px",
+
+                        border:this.state.managingStyle.border,
+                    }}
+                >
+                    <b>Manage Garden</b>
+                </button>
+                
+                
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
                 
                 <div>{this.state.plants}</div>

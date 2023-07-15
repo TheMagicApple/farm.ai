@@ -72,9 +72,10 @@ body{
 }
 .button{
   transition:0.1s all;
+  cursor:pointer;
 }
 .button:hover{
-  filter:brightness(90%);
+  
 }
 .gardenFood{
   animation:float 3s ease infinite; 
