@@ -1,3 +1,4 @@
+import { toHaveAccessibleDescription } from "@testing-library/jest-dom/matchers.js";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -223,15 +224,19 @@ class Garden extends React.Component {
             selectY:"",
             predictAnswer:"",
             cropsPlaced:[],
-            editingStyle:{color: "white",backgroundColor: "#00affa",border:"none"},
-            managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},
+            editingStyle:{color: "white",backgroundColor: "#00affa",border:"none",opacity:"1"},
+            managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},
+            cropTypes:[], //sample data
+            cropTimes:[], //also sample data
+            dayPx:0, //day to pixels ratio for timeline
+            cropPredictions:[],
         };
         this.placeFruit = this.placeFruit.bind(this);
         this.activateEditing=this.activateEditing.bind(this);
         this.activateManaging=this.activateManaging.bind(this);
         
     }
-    predictTime(cropName){
+    async predictTime(cropName){
         var predictor = require("./predictor.js");
         predictor.initialize(() => {
             var answer=predictor.predict(cropName, 0);
@@ -300,8 +305,7 @@ class Garden extends React.Component {
             else cropSelects.push(<CropSelector onClick={this.selectCrop} left={left} top={9+Math.floor(i/2)*18+"%"} width="100px" height="100px" cropName={crops[i]} border="2px solid rgba(0,0,0,0.1)"/>);
         }
 
-        this.predictTime(cropName);
-        setTimeout(() => {alert(Math.round(this.state.predictAnswer.time)+" "+this.state.predictAnswer.amount);}, 500);
+       
         
         this.setState({cropSelected:cropName,cropSelects});
         
@@ -390,10 +394,10 @@ class Garden extends React.Component {
         this.setState({ plants, plantPositions,cropsPlaced});
     }
     activateEditing(){
-        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},});
+        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},});
     }
     activateManaging(){
-        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent"},});
+        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},});
 
 		var cropsPlaced = this.state.cropsPlaced;
 		var counts = {};
@@ -405,32 +409,43 @@ class Garden extends React.Component {
 		
 		var amounts = {};
 		var times = {};
-		for (var i = 0; i < Object.keys(counts).length; i++) {
-			var cropType = Object.keys(counts)[i];
-			var cropCount = counts[cropType];
-			
-			this.predictTime(cropType);
-			setTimeout(() => {
-				var cropTime = this.state.predictAnswer.time;
-				times[cropType] = [cropTime - 5, cropTime + 5];
-				
-				var cropAmountStr = this.state.predictAnswer.amount;
-				cropAmountStr = cropAmountStr.substring(0, cropAmountStr.length - 3);
-				var amountSplit = cropAmountStr.split("-");
-				var minAmount = parseFloat(amountSplit[0]) * cropCount;
-				var maxAmount = parseFloat(amountSplit[1]) * cropCount;
-				amounts[cropType] = [minAmount, maxAmount];
-			}, 500);
-		}
+        var predictor = require("./predictor.js");
+        predictor.initialize(() => {
+            for (var i = 0; i < Object.keys(counts).length; i++) {
+                var cropType = Object.keys(counts)[i];
+                var cropCount = counts[cropType];  
+                var answer=predictor.predict(cropType, 0);
+                var cropTime = answer.time;
+                times[cropType] = [cropTime - 5, cropTime + 5];
+                    
+                var cropAmountStr = answer.amount;
+                cropAmountStr = cropAmountStr.substring(0, cropAmountStr.length - 3);
+                var amountSplit = cropAmountStr.split("-");
+                var minAmount = parseFloat(amountSplit[0]) * cropCount;
+                var maxAmount = parseFloat(amountSplit[1]) * cropCount;
+                amounts[cropType] = [minAmount, maxAmount];	
+            }
+        
+            var already=[];
+            var cropPredictions=[];
+            for(let i=0;i<this.state.cropsPlaced.length;i++){
+                if(!already.includes(this.state.cropsPlaced[i])){
+                    cropPredictions.push(<CropPrediction left="80%" top={(10+i*17)+"%"} backgroundColor="#F73D4A" cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]}/>);
+                    already.push(this.state.cropsPlaced[i]);
+                }
+            }
+            this.setState({cropPredictions});
+        });
     }
+    
     render() {
         return (
             <>
-               {/*<Timeline></Timeline>*/}
+               {<Timeline></Timeline>}
                
                 
-                
-                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll"}}>{this.state.cropSelects}</div>
+               <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all"}}>{this.state.cropPredictions}</div>
+                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all"}}>{this.state.cropSelects}</div>
                 <button onClick={this.activateEditing} className="div button"
                     style={{
                         width: "200px",
@@ -465,12 +480,28 @@ class Garden extends React.Component {
                 
                 
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
+
                 
                 <div>{this.state.plants}</div>
                 <div style={{position:"absolute",width:"2px",height:"100%",left:"75%",top:"0%",backgroundColor:"rgba(0,0,0,0.2)"}}></div>
-                <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>Select A Plant</div>
+                <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>{this.state.editingStyle.opacity=="1"?"Select A Plant":"Plant Yields"}</div>
             </>
         );
+    }
+}
+class CropPrediction extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return  <>
+                    <div style={{position:"absolute",left:this.props.left,top:this.props.top,width:"15%",height:"15%",backgroundColor:this.props.backgroundColor,borderRadius:"5px"}}>
+                        <img style={{backgroundColor:"white",position:"absolute",width:"100px",height:"100px",left:"7%",top:"10%",borderRadius:"10px"}}src={require("./asset/"+this.props.cropName+".png")}/>
+                        <div className="div" style={{width:"100px",left:"7%",fontSize:"20px",color:"white",top:"80%"}}><b>{this.props.cropName}</b></div>
+                        <div className="div" style={{width:"60%",left:"40%",fontSize:"40px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
+                        <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
+                    </div>
+                </>
     }
 }
 class FallingFruit extends React.Component {
@@ -562,33 +593,42 @@ class CropSelector extends React.Component {
 class Timeline extends React.Component {
     constructor(props) {
         super(props);
-        let maxTime = 0;
-        /*for (let i=0; i<plants.length; i++) {
-            predictor.initialize(() => {
-            predictor.predict("Tomato", daysGrowing = 4);
-            if (predictor.predict(plants[i]) > maxTime) {
-                maxTime = predictictor.predict(plants[i]); // number of days
-            }
-
-        });
-
-        }
-        var TIMELINE_SIZE = 700 //px
-        var dayPx = maxTime/TIMELINE_SIZE // each day is x px on timeline
-        */
-       var dayPx = 99999; //for testing
     }
 
 
     render() {
+        //alert(maxTime);
+
+        var maxTime = 20; // time in days
+
+        //GET THE TIME FOR EACH CROP THAT HAS BEEN PLANTED
+        //HOWHOWHOWHOWHOWHOW
+        //HOW
+        //WHERE IS IT
+
+        //sample data
+        var cropTypes = ["Blueberry", "Tomato"];
+        var cropTimes = [50, 40];
+        var TIMELINE_SIZE = 700; //px
+        var dayPx = maxTime/TIMELINE_SIZE; // each day is x px on timeline
+
+        var cropMarkers = [];
+        for (var i=0; i<cropTypes.length; i++) {
+            cropMarkers.push(
+                <CropMarker left={dayPx*cropTimes[i]}></CropMarker>
+            )
+        }
+
         return (
             <>
                 <hr
                     style={{
                         color:"red",
                     }}
+
                 />
                 <CropMarker  left="50%" dayPx={this.dayPx}></CropMarker>
+                {cropMarkers}
             </>
         );
     }
@@ -599,7 +639,7 @@ class CropMarker extends React.Component { // marker that displays grop range in
         super(props);
     }
     render() {
-        alert("PX"+ this.props.dayPx)
+        //alert("PX"+ this.props.dayPx)
         return (
             <>
             <div style={{ 
