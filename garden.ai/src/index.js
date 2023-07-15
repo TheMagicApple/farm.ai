@@ -11,51 +11,80 @@ root.render(
   </React.StrictMode>
 );
 
-/*
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
 
-function showPosition() {
-  
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      coordinates = [position.coords.latitude, position.coords.longitude];
-      localStorage.setItem("Coords",JSON.stringify(coordinates)); 
-      })
-                
-             
-        } else {
-            alert("Sorry, your browser does not support HTML5 geolocation.");
-        }
-    
-}
-showPosition();
-var coordinates=JSON.parse(localStorage.getItem("Coords"));
-alert(coordinates);
-*/
+const weatherAPIKey = ""; // API key for openweathermap.org here
 
+
+var lat;
+var lon;
+var temp;
+var hum;
 
 
 function main() {
 	var predictor = require("./predictor.js");
-	var lat = coordinates[0];
-	var lon = coordinates[1];
-	/*
-	predictor.getWeatherData(lat, lon).then(data => {
-		alert("temp=" + data.main.temp + ", humidity=" + data.main.humidity);
-	});
-	*/
+	
+	alert("lat=" + lat +", lon=" + lon + ", temp=" + temp + "C, hum=" + hum + "%");
+	//alert(predictor.daysToMaturity("Tomato", temp, hum, 57));
 }
 
 
-var coordinates;
+/**
+ * Format the OpenWeatherMap endpoint URL for API access.
+ *
+ * @param lat  the latitude for the request.
+ * @parma lon  the longitude for the request.
+ *
+ * @return a formatted URL which the api request can be sent to.
+ */
+function _getWeatherEndpoint() {
+	return "https://api.openweathermap.org/data/2.5/weather?" +
+		"lat=" + lat + "&" +
+		"lon=" + lon + "&" +
+		"units=metric&" +
+		"appid=" + weatherAPIKey;
+}
+
+
+/**
+ * Step 2 of the initialization process. Sets the temperature and humidity and then invokes
+ * the main function for usage. By the time main() is invoked, all data is correctly set.
+ */
+function setWeatherData() {
+	var endpoint = _getWeatherEndpoint();
+
+	fetch(endpoint)
+	    .then((response) => response.json())
+	    .then((data) => {
+			if (data === undefined || data.main === undefined) {
+				temp = Number.NEGATIVE_INFINITY;
+				hum = Number.NEGATIVE_INFINITY;
+			}
+			else {
+				temp = data.main.temp;
+				hum = data.main.humidity;
+			}
+			main();
+		})
+	    .catch((error) => {
+			console.error(error);
+		});
+}
+
+
+/**
+ * Step 2 of the initialization process. Sets the lat/lon and then invokes the weather
+ * data setup.
+ */
 function setCoordinates(position) {
-	coordinates = [position.coords.latitude, position.coords.longitude];
-	main();
+	lat = position.coords.latitude;
+	lon = position.coords.longitude;
+	setWeatherData();
 }
 
+
+// Step 1 of async initialization process.
+// Starts by invoking the geolocation process.
 if (navigator.geolocation)
 	navigator.geolocation.getCurrentPosition(setCoordinates);
 else
