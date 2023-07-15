@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
+var predictor = require("./predictor.js")
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -381,10 +382,19 @@ class Timeline extends React.Component {
         super(props);
         let maxTime = 0;
         /*for (let i=0; i<plants.length; i++) {
-            if (predict(plants[i]) > maxTime) {
-                maxTime = predict(plants[i]); // number of days
+            predictor.initialize(() => {
+            predictor.predict("Tomato", daysGrowing = 4);
+            if (predictor.predict(plants[i]) > maxTime) {
+                maxTime = predictictor.predict(plants[i]); // number of days
             }
-        }*/
+
+        });
+
+        }
+        var TIMELINE_SIZE = 700 //px
+        var dayPx = maxTime/TIMELINE_SIZE // each day is x px on timeline
+        */
+       var dayPx = 99999; //for testing
     }
 
 
@@ -396,7 +406,7 @@ class Timeline extends React.Component {
                         color:"red",
                     }}
                 />
-                <CropMarker left="50%"></CropMarker>
+                <CropMarker  left="50%" dayPx={this.dayPx}></CropMarker>
             </>
         );
     }
@@ -407,6 +417,7 @@ class CropMarker extends React.Component { // marker that displays grop range in
         super(props);
     }
     render() {
+        alert("PX"+ this.props.dayPx)
         return (
             <>
             <div style={{ 
