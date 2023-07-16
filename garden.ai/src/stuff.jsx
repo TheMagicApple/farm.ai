@@ -65,6 +65,7 @@ class Home extends React.Component {
             ],
             fallingFruit: [],
         };
+        this.explore=this.explore.bind(this);
     }
     componentDidMount() {
         var fallingFruit = [];
@@ -93,7 +94,22 @@ class Home extends React.Component {
                 const credential = GoogleAuthProvider.credentialFromError(error);
         });*/
     }
-    
+    explore(){
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                const user = result.user;
+                window.location.href="/garden";
+            }).catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                const email = error.customData.email;
+                const credential = GoogleAuthProvider.credentialFromError(error);
+        });
+    }
 
 
     render() {
@@ -168,7 +184,7 @@ class Home extends React.Component {
                     We use AI data analysis to manage your garden, preventing hundreds of
                     pounds of food being wasted.
                 </div>
-                <Link
+                <button onClick={this.explore}
                     className="div button thing"
                     to="/garden"
                     style={{
@@ -180,10 +196,11 @@ class Home extends React.Component {
                         color: "white",
                         backgroundColor: "#00affa",
                         borderRadius: "5px",
+                        border:"none",
                     }}
                 >
                     <b>Explore</b>
-                </Link>
+                </button>
             </>
         );
     }
