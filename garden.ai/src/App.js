@@ -7,9 +7,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-          <Route index element={<Home/>}/>
-          <Route path="/garden" element={<Garden/>}/>
-		  <Route path="/catalogue" element={<Catalogue/>}/>
+          <Route index element={<Home style={{overflow:"hidden"}}/>}/>
+          <Route path="/garden" element={<Garden style={{overflowY:"hidden"}}/>}/>
+		      <Route path="/catalogue" element={<Catalogue style={{overflowY:"scroll"}}/>}/>
       </Routes>
     </BrowserRouter>
 

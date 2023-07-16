@@ -254,5 +254,6 @@ function _getWeatherEndpoint() {
 
 module.exports = {
 	initialize,
-	predict
+	predict,
+	getCatalogueEntry
 }

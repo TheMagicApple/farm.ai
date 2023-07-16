@@ -73,7 +73,7 @@ class Home extends React.Component {
             var delay = Math.random() * 10;
             var fallDuration = (Math.random() * 10)/2 + 3;
             var spinDuration = Math.random() * 360 ;
-            fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={x+ "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
+            fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={x+ "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration} />);
             x+=2;
         }
         this.setState({ fallingFruit });
@@ -99,8 +99,42 @@ class Home extends React.Component {
     render() {
         return (
             <>
+                
+                
                 {this.state.fallingFruit}
-
+                <Link to="/" className="div" style={{position:"absolute",fontSize:"50px",left:"5%",top:"3%",color:"black"}}>garden.ai</Link>
+                <Link
+                    className="div button thing"
+                    to="/catalogue"
+                    style={{
+                        width: "200px",
+                        height: "50px",
+                        left: "85%",
+                        top: "5%",
+                        fontSize: "20px",
+                        color: "white",
+                        backgroundColor: "rgba(0, 206, 10, 1)",
+                        borderRadius: "5px",
+                    }}
+                >
+                    <b>Plant Catalogue</b>
+                </Link>
+                <Link
+                    className="div button thing"
+                    to="/garden"
+                    style={{
+                        width: "120px",
+                        height: "50px",
+                        left: "77%",
+                        top: "5%",
+                        fontSize: "20px",
+                        color: "white",
+                        backgroundColor: "#00affa",
+                        borderRadius: "5px",
+                    }}
+                >
+                    <b>Garden</b>
+                </Link>
                 <div
                     className="div"
                     style={{
@@ -135,7 +169,7 @@ class Home extends React.Component {
                     pounds of food being wasted.
                 </div>
                 <Link
-                    className="div button"
+                    className="div button thing"
                     to="/garden"
                     style={{
                         width: "300px",
@@ -254,6 +288,7 @@ class Garden extends React.Component {
             cropTimes:[], //also sample data
             dayPx:0, //day to pixels ratio for timeline
             cropPredictions:[],
+            cropMarkers:[],
         };
         this.placeFruit = this.placeFruit.bind(this);
         this.activateEditing=this.activateEditing.bind(this);
@@ -446,7 +481,7 @@ class Garden extends React.Component {
                 var cropCount = counts[cropType];  
                 var answer=predictor.predict(cropType, 0);
                 var cropTime = answer.time;
-                times[cropType] = [cropTime - 5, cropTime + 5];
+                times[cropType] = [cropTime - Math.round(Math.random()*10+5), cropTime + Math.round(Math.random()*10+5)];
                     
                 var minAmount = Math.round(answer.amount.min * cropCount * 10) / 10;
 				var maxAmount = Math.round(answer.amount.max * cropCount * 10) / 10;
@@ -455,6 +490,7 @@ class Garden extends React.Component {
         
             var already=[];
             var cropPredictions=[];
+            var cropMarkers=[];
             var cropColors={"Honeydew": "d9df95", "Kale": "a8c470", "Raspberry": "e88e8e", "Peach": "852227", "Cauliflower": "e2d9c1", "Zucchini": "427a15", "Tomatillo": "6c826d", "Squash": "f4981d", "Potato": "835420", "Bell Pepper": "fe352b", "Carrot": "c33f00", "Parsley": "e3ffe3", "Blueberry": "424e7e", "Pineapple": "ffba38", "Watercress": "808080", "Celery": "94c132", "Artichoke": "3d6038", "Cantaloupe": "be7e3b", "Green Bean": "ffffdb", "Mango": "fcd62d", "Mint": "5caa57", "Onion": "c37f43", "Tomato": "f73d4a", "Asparagus": "729d58", "Watermelon": "90110b", "Cherry": "ad0c00", "Grapes": "94ff63", "Pomegranate": "f40022", "Cilantro": "e3ffe3", "Green Onion": "fffff4", "Rhubarb": "7c995c", "soil": "444440", "Garlic": "ffffc6", "Pear": "cacc13", "Peas": "2b402b", "Brussels": "abc756", "Lima Beans": "e0d4ba", "Cucumber": "7aac2f", "Eggplant": "4d227e", "Spinach": "ffffe6", "Collard Greens": "444b29", "Cabbage": "87e3cc", "Beetroot": "fc4c61", "Strawberry": "f63937", "Lettuce": "8bb164", "Sweet Corn": "d9c53e", "Pumpkin": "b74722", "Radish": "83191b", "Kiwi": "d69f38", "Turnip": "ceba95", "Broccoli": "119e4b"};
             var counter=0;
             for(let i=0;i<this.state.cropsPlaced.length;i++){
@@ -465,10 +501,18 @@ class Garden extends React.Component {
                     }
                     cropPredictions.push(<CropPrediction left="81%" top={(10+counter*17)+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]} cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]]} text={text}/>);
                     counter++;
+                    var time=times[this.state.cropsPlaced[i]];
+                    var min=30;
+                    var max=150;
+                    var width=((time[1]-time[0])/(max-min))*100;
+                    var left=((time[0]-min)/(max-min))*100;
+                    cropMarkers.push(<CropMarker left={left+"%"} height="10%" top={(3+counter*17)+"%"} width={width+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]+"66"} border={"4px solid "+"#"+cropColors[this.state.cropsPlaced[i]]}/>);
+                    
                     already.push(this.state.cropsPlaced[i]);
                 }
             }
-            this.setState({cropPredictions});
+
+            this.setState({cropPredictions,cropMarkers});
         });
     }
     getBrightness(hexColor) {
@@ -481,16 +525,16 @@ class Garden extends React.Component {
     render() {
         return (
             <>
-               {<Timeline></Timeline>}
+              
                
                 
-               <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all"}}>{this.state.cropPredictions}</div>
+               <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all"}}> <Timeline cropMarkers={this.state.cropMarkers}></Timeline> {this.state.cropPredictions}</div>
                 <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all"}}>{this.state.cropSelects}<div style={{position:"absolute",top:"4400px",width:"100%",height:"100px",backgroundColor:"transparent"}}></div></div>
                 <button onClick={this.activateEditing} className="div button"
                     style={{
                         width: "200px",
                         height: "40px",
-                        left: "2%",
+                        left: "52%",
                         top: "3%",
                         fontSize: "20px",
                         color: this.state.editingStyle.color,
@@ -505,7 +549,7 @@ class Garden extends React.Component {
                     style={{
                         width: "200px",
                         height: "40px",
-                        left: "12.4%",
+                        left: "62.4%",
                         top: "3%",
                         fontSize: "20px",
                         color: this.state.managingStyle.color,
@@ -517,7 +561,7 @@ class Garden extends React.Component {
                 >
                     <b>Manage Garden</b>
                 </button>
-                
+                <Link to="/" className="div" style={{position:"absolute",fontSize:"50px",left:"5%",top:"3%",color:"black"}}>garden.ai</Link>
                 
                 <div onClick={this.placeFruit}>{this.state.soilBlocks}</div>
 
@@ -527,6 +571,134 @@ class Garden extends React.Component {
                 <div style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"white",position:"absolute",width:"25%",height:"8%",left:"75.1%",top:"0%",textAlign:"center",fontSize:"45px"}}>{this.state.editingStyle.opacity=="1"?"Select A Plant":"Plant Yields"}</div>
             </>
         );
+    }
+}
+class Catalogue extends React.Component{
+    constructor(props){
+        super(props);
+        var crops=[
+            "Tomato",
+            "Carrot",
+            "Lettuce",
+            "Cucumber",
+            "Spinach",
+            "Bell Pepper",
+            "Broccoli",
+            "Cabbage",
+            "Onion",
+            "Strawberry",
+            "Potato",
+            "Zucchini",
+            "Green Bean",
+            "Radish",
+            "Watermelon",
+            "Pumpkin",
+            "Sweet Corn",
+            "Cauliflower",
+            "Eggplant",
+            "Cilantro",
+            "Cantaloupe",
+            "Garlic",
+            "Kale",
+            "Peas",
+            "Beetroot",
+            "Raspberry",
+            "Blueberry",
+            "Mint",
+            "Parsley",
+            "Cherry",
+            "Grapes",
+            "Squash",
+            "Artichoke",
+            "Asparagus",
+            "Brussels",
+            "Celery",
+            "Collard Greens",
+            "Green Onion",
+            "Honeydew",
+            "Kiwi",
+            "Lima Beans",
+            "Mango",
+            "Peach",
+            "Pear",
+            "Pineapple",
+            "Pomegranate",
+            "Rhubarb",
+            "Tomatillo",
+            "Turnip",
+            "Watercress",
+        ];
+        crops.sort();
+        var cropColors={"Honeydew": "d9df95", "Kale": "a8c470", "Raspberry": "e88e8e", "Peach": "852227", "Cauliflower": "e2d9c1", "Zucchini": "427a15", "Tomatillo": "6c826d", "Squash": "f4981d", "Potato": "835420", "Bell Pepper": "fe352b", "Carrot": "c33f00", "Parsley": "e3ffe3", "Blueberry": "424e7e", "Pineapple": "ffba38", "Watercress": "808080", "Celery": "94c132", "Artichoke": "3d6038", "Cantaloupe": "be7e3b", "Green Bean": "ffffdb", "Mango": "fcd62d", "Mint": "5caa57", "Onion": "c37f43", "Tomato": "f73d4a", "Asparagus": "729d58", "Watermelon": "90110b", "Cherry": "ad0c00", "Grapes": "94ff63", "Pomegranate": "f40022", "Cilantro": "e3ffe3", "Green Onion": "fffff4", "Rhubarb": "7c995c", "soil": "444440", "Garlic": "ffffc6", "Pear": "cacc13", "Peas": "2b402b", "Brussels": "abc756", "Lima Beans": "e0d4ba", "Cucumber": "7aac2f", "Eggplant": "4d227e", "Spinach": "ffffe6", "Collard Greens": "444b29", "Cabbage": "87e3cc", "Beetroot": "fc4c61", "Strawberry": "f63937", "Lettuce": "8bb164", "Sweet Corn": "d9c53e", "Pumpkin": "b74722", "Radish": "83191b", "Kiwi": "d69f38", "Turnip": "ceba95", "Broccoli": "119e4b"};
+        
+        
+        var predictor = require("./predictor.js");
+        var catalogCrops=[];
+        for(let i=0;i<crops.length;i++){
+            catalogCrops.push(<CatalogCrop x={17+23*(i%3)+"%"} y={15+Math.floor(i/3)*25+"%"} item={predictor.getCatalogueEntry(crops[i])} cropName={crops[i]} color={"#"+cropColors[crops[i]]}/>);
+        }
+        this.state={catalogCrops:catalogCrops};
+        
+    }
+    render(){
+        return  <> 
+                    <Link to="/" className="div" style={{position:"absolute",fontSize:"50px",left:"5%",top:"3%",color:"black",fontFamily:" 'Open Sans', sans-serif"}}>garden.ai</Link>
+                <Link
+                    className="div button thing"
+                    to="/catalogue"
+                    style={{
+                        width: "200px",
+                        height: "50px",
+                        left: "85%",
+                        top: "5%",
+                        fontSize: "20px",
+                        color: "white",
+                        backgroundColor: "rgba(0, 206, 10, 1)",
+                        borderRadius: "5px",
+                    }}
+                >
+                    <b>Plant Catalogue</b>
+                </Link>
+                <Link
+                    className="div button thing"
+                    to="/garden"
+                    style={{
+                        width: "120px",
+                        height: "50px",
+                        left: "77%",
+                        top: "5%",
+                        fontSize: "20px",
+                        color: "white",
+                        backgroundColor: "#00affa",
+                        borderRadius: "5px",
+                    }}
+                >
+                    <b>Garden</b>
+                </Link>
+                    {this.state.catalogCrops}
+                </>
+    }
+}
+class CatalogCrop extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return  <>
+                
+                
+                
+                <div style={{position:"absolute",left:this.props.x,top:this.props.y,width:"20%",height:"20%",border:"2px solid rgba(0,0,0,0.1)",borderRadius:"10px",overflow:"hidden"}}>
+                    <img width="100px" height="100px" src={require("./asset/"+this.props.cropName+".png")} style={{position:"absolute",left:"10%",top:"15%"}}/>
+                    <div className="div" style={{width:"200px",left:"-1%",top:"75%",fontSize:"27px",lineSpacing:"50px"}}>{this.props.cropName}</div>
+                    <div className="div" style={{width:"280px",left:"30%",top:"5%",fontSize:"22px"}}>🌡️: {this.props.item.temperature} °C</div>
+                    <div className="div" style={{width:"280px",left:"30%",top:"23.75%",fontSize:"22px"}}>♨️: {this.props.item.humidity}%</div>
+                    <div className="div" style={{width:"280px",left:"30%",top:"42.5%",fontSize:"22px"}}>📏: {this.props.item.height} CM</div>
+                    <div className="div" style={{width:"280px",left:"30%",top:"61.25%",fontSize:"22px"}}>💧: {Math.round(this.props.item.water*10)/10} L/WK</div>
+                    <div className="div" style={{width:"280px",left:"30%",top:"80%",fontSize:"22px"}}>🌵: {this.props.item.droughtTolerance}</div>
+                </div>
+                
+                </>
     }
 }
 class CropPrediction extends React.Component{
@@ -556,7 +728,6 @@ class FallingFruit extends React.Component {
                     src={require("./asset/" + this.props.image)}
                     style={{
                         left: this.props.left,
-                        animationDelay: this.props.delay,
                         animation:
                             "fall " +
                             this.props.fallDuration +
@@ -633,88 +804,33 @@ class Timeline extends React.Component {
     constructor(props) {
         super(props);
     }
-
-
     render() {
-        //alert(maxTime);
-
-        var maxTime = 20; // time in days
-
-        //GET THE TIME FOR EACH CROP THAT HAS BEEN PLANTED
-        //HOWHOWHOWHOWHOWHOW
-        //HOW
-        //WHERE IS IT
-
-        //sample data
-        var cropTypes = ["Blueberry", "Tomato"];
-        var cropTimes = [50, 40];
-        var TIMELINE_SIZE = 700; //px
-        var dayPx = maxTime/TIMELINE_SIZE; // each day is x px on timeline
-
-        var cropMarkers = [];
-        for (var i=0; i<cropTypes.length; i++) {
-            cropMarkers.push(
-                <CropMarker left={dayPx*cropTimes[i]}></CropMarker>
-            )
-        }
-
-        return (
-            <>
-                <hr
-                    style={{
-                        color:"red",
-                    }}
-
-                />
-                <CropMarker  left="50%" dayPx={this.dayPx}></CropMarker>
-                {cropMarkers}
-            </>
-        );
+        return  <>
+                    <div style={{position:"absolute",fontSize:"30px",left:"78%",top:"80%"}}>Harvest Timeline</div>
+                    <div style={{position:"absolute",width:"2px",height:"20px",left:"78.5%",top:"94.5%",backgroundColor:"rgba(0,0,0,1)"}}></div>
+                    <div style={{position:"absolute",width:"2px",height:"20px",left:"78%",top:"96.5%",color:"rgba(0,0,0,1)",fontSize:"15px"}}>30D</div>
+                    <div style={{position:"absolute",width:"2px",height:"20px",left:"88%",top:"94.5%",backgroundColor:"rgba(0,0,0,1)"}}></div>
+                    <div style={{position:"absolute",width:"2px",height:"20px",left:"87.5%",top:"96.5%",color:"rgba(0,0,0,1)",fontSize:"15px"}}>90D</div>
+                    <div style={{position:"absolute",width:"2px",height:"20px",left:"97.5%",top:"94.5%",backgroundColor:"rgba(0,0,0,1)"}}></div>
+                    <div style={{position:"absolute",width:"2px",height:"20px",left:"96.5%",top:"96.5%",color:"rgba(0,0,0,1)",fontSize:"15px"}}>150D</div>
+                    <div style={{position:"absolute",border:"2px solid rgba(0,0,0,0.2)",width:"20%",height:"10%",left:"78%",top:"85%",borderRadius:"5px"}}>
+                        {this.props.cropMarkers}
+                    </div>                               
+                </>
     }
 }
 
-class CropMarker extends React.Component { // marker that displays grop range in timeline
+class CropMarker extends React.Component {
     constructor(props) {
         super(props);
     }
     render() {
-        //alert("PX"+ this.props.dayPx)
-        return (
-            <>
-            <div style={{ 
-            position:"absolute",
-            left:this.props.left, 
-            height: "10px",
-            width: "2px",
-            backgroundColor: "red",
-        }}>
-
-        </div>
-        <div style={{
-            position:"absolute",
-            left:this.props.left,
-        }}>
-            {this.props.cropName}: props.time
-        </div>
-            </>
-        )
+        return  <>
+                    <div style={{position:"absolute",left:this.props.left,top:this.props.top,height:this.props.height,width:this.props.width,backgroundColor:this.props.backgroundColor,borderLeft:this.props.border,borderRight:this.props.border}}></div>
+                </>
     }
 }
 
-
-class Catalogue extends React.Component {
-	constructor(props) {
-        super(props);
-	}
-
-	render() {
-		return (
-			<>
-			  
-			</>
-		)
-	}
-}
 
 
 export { Home, Garden, Catalogue };

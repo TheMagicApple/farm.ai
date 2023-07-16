@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap');
 body{
   overflow-x:hidden;
-  overflow-y:hidden;
+  
 }
 .div{
   position:absolute;
@@ -79,6 +79,9 @@ body{
 }
 .gardenFood{
   animation:float 3s ease infinite; 
+}
+.thing:hover{
+  transform:scale(1.1);
 }
 @keyframes float{
 	0% { transform: translate(0,  0px); }
