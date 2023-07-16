@@ -2,6 +2,10 @@ import { toHaveAccessibleDescription } from "@testing-library/jest-dom/matchers.
 import React from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
+import {db} from "./firebaseDb.js";
+import {doc,collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, getDocs} from "firebase/firestore"; 
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 var predictor = require("./predictor.js")
 class Home extends React.Component {
     constructor(props) {
@@ -64,14 +68,34 @@ class Home extends React.Component {
     }
     componentDidMount() {
         var fallingFruit = [];
+        var x=0;
         for (let i = 0; i < this.state.fruit.length; i++) {
             var delay = Math.random() * 10;
             var fallDuration = Math.random() * 5 + 3;
             var spinDuration = Math.random() * 3 + 1;
-            fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={i * 2 + "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
+            fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={x+ "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
+            x+=2;
         }
         this.setState({ fallingFruit });
+        
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                const user = result.user;
+                alert(user.uid);
+            }).catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                const email = error.customData.email;
+                const credential = GoogleAuthProvider.credentialFromError(error);
+        });
     }
+    
+
+
     render() {
         return (
             <>
@@ -224,8 +248,8 @@ class Garden extends React.Component {
             selectY:"",
             predictAnswer:"",
             cropsPlaced:[],
-            editingStyle:{color: "white",backgroundColor: "#00affa",border:"none",opacity:"1"},
-            managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},
+            editingStyle:{color: "white",backgroundColor: "#346beb",border:"none",opacity:"1"},
+            managingStyle:{color: "#346beb",backgroundColor: "transparent",border:"2px solid #346beb",opacity:"0"},
             cropTypes:[], //sample data
             cropTimes:[], //also sample data
             dayPx:0, //day to pixels ratio for timeline
@@ -242,6 +266,9 @@ class Garden extends React.Component {
             var answer=predictor.predict(cropName, 0);
             this.setState({predictAnswer:answer});
         });
+    }
+    componentDidMount(){
+        this.selectCrop(null,"Blueberry");
     }
     selectCrop(event,cropName){
         var crops=[
@@ -394,10 +421,10 @@ class Garden extends React.Component {
         this.setState({ plants, plantPositions,cropsPlaced});
     }
     activateEditing(){
-        this.setState({ editingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},managingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},});
+        this.setState({ editingStyle:{color: "white",backgroundColor: "#346beb",border:"2px solid transparent",opacity:"1"},managingStyle:{color: "#346beb",backgroundColor: "transparent",border:"2px solid #346beb",opacity:"0"},});
     }
     activateManaging(){
-        this.setState({ editingStyle:{color: "#00affa",backgroundColor: "transparent",border:"2px solid #00affa",opacity:"0"},managingStyle:{color: "white",backgroundColor: "#00affa",border:"2px solid transparent",opacity:"1"},});
+        this.setState({ editingStyle:{color: "#346beb",backgroundColor: "transparent",border:"2px solid #346beb",opacity:"0"},managingStyle:{color: "white",backgroundColor: "#346beb",border:"2px solid transparent",opacity:"1"},});
 
 		var cropsPlaced = this.state.cropsPlaced;
 		var counts = {};
@@ -455,7 +482,7 @@ class Garden extends React.Component {
                
                 
                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.managingStyle.opacity,transition:"0.1s all"}}>{this.state.cropPredictions}</div>
-                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all"}}>{this.state.cropSelects}</div>
+                <div style={{position:"absolute",height:"100%",width:"100%",overflowY:"scroll",opacity:this.state.editingStyle.opacity,transition:"0.1s all"}}>{this.state.cropSelects}<div style={{position:"absolute",top:"4400px",width:"100%",height:"100px",backgroundColor:"transparent"}}></div></div>
                 <button onClick={this.activateEditing} className="div button"
                     style={{
                         width: "200px",
@@ -508,7 +535,7 @@ class CropPrediction extends React.Component{
                     <div style={{position:"absolute",left:this.props.left,top:this.props.top,width:"15%",height:"15%",backgroundColor:this.props.backgroundColor,borderRadius:"5px"}}>
                         <img style={{backgroundColor:"white",position:"absolute",width:"100px",height:"100px",left:"7%",top:"10%",borderRadius:"10px"}}src={require("./asset/"+this.props.cropName+".png")}/>
                         <div className="div" style={{width:"100px",left:"7%",fontSize:"20px",color:"white",top:"80%"}}><b>{this.props.cropName}</b></div>
-                        <div className="div" style={{width:"60%",left:"40%",fontSize:"40px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
+                        <div className="div" style={{width:"60%",left:"40%",fontSize:"35px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
                         <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
                     </div>
                 </>
