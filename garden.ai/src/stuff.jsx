@@ -701,4 +701,20 @@ class CropMarker extends React.Component { // marker that displays grop range in
     }
 }
 
-export { Home, Garden };
+
+class Catalogue extends React.Component {
+	constructor(props) {
+        super(props);
+	}
+
+	render() {
+		return (
+			<>
+			  
+			</>
+		)
+	}
+}
+
+
+export { Home, Garden, Catalogue };
