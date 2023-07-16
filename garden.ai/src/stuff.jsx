@@ -71,7 +71,7 @@ class Home extends React.Component {
         var x=0;
         for (let i = 0; i < this.state.fruit.length; i++) {
             var delay = Math.random() * 10;
-            var fallDuration = Math.random() * 5 + 3;
+            var fallDuration = (Math.random() * 10)/2 + 3;
             var spinDuration = Math.random() * 360 ;
             fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={x+ "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
             x+=2;
@@ -339,6 +339,9 @@ class Garden extends React.Component {
         
     }
     placeFruit(event) {
+        if(this.state.editingStyle.color=="#346beb"){
+            return;
+        }
         var x = event.screenX / 19.2;
         var y = (event.screenY-50) / 10;
         var minDistance = 10000000;
@@ -447,7 +450,7 @@ class Garden extends React.Component {
                     
                 var minAmount = Math.round(answer.amount.min * cropCount * 10) / 10;
 				var maxAmount = Math.round(answer.amount.max * cropCount * 10) / 10;
-                amounts[cropType] = [minAmount, maxAmount];	
+                amounts[cropType] = Math.round(((minAmount+maxAmount)/2)*10)/10;	
             }
         
             var already=[];
@@ -460,7 +463,7 @@ class Garden extends React.Component {
                     if(this.getBrightness(cropColors[this.state.cropsPlaced[i]])>185){
                         text="black";
                     }
-                    cropPredictions.push(<CropPrediction left="81%" top={(10+counter*17)+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]} cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]][0]+" - "+amounts[this.state.cropsPlaced[i]][1]} text={text}/>);
+                    cropPredictions.push(<CropPrediction left="81%" top={(10+counter*17)+"%"} backgroundColor={"#"+cropColors[this.state.cropsPlaced[i]]} cropName={this.state.cropsPlaced[i]} cropPrediction={amounts[this.state.cropsPlaced[i]]} text={text}/>);
                     counter++;
                     already.push(this.state.cropsPlaced[i]);
                 }
@@ -535,8 +538,8 @@ class CropPrediction extends React.Component{
                     <div style={{position:"absolute",left:this.props.left,top:this.props.top,width:"15%",height:"15%",backgroundColor:this.props.backgroundColor,borderRadius:"5px"}}>
                         <img style={{backgroundColor:"white",position:"absolute",width:"100px",height:"100px",left:"7%",top:"10%",borderRadius:"10px"}}src={require("./asset/"+this.props.cropName+".png")}/>
                         <div className="div" style={{width:"100px",left:"7%",fontSize:"20px",color:"white",top:"80%"}}><b>{this.props.cropName}</b></div>
-                        <div className="div" style={{width:"60%",left:"40%",fontSize:"35px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
-                        <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"55%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
+                        <div className="div" style={{width:"60%",left:"40%",fontSize:"50px",color:"white",top:"20%",fontFamily:"'Open Sans', sans-serif"}}><b>{this.props.cropPrediction}</b></div>
+                        <div style={{position:"absolute",left:"63%",fontSize:"30px",color:"white",top:"60%",fontFamily:"'Open Sans', sans-serif"}}><b>KG</b></div>
                     </div>
                 </>
     }
