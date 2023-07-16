@@ -95,7 +95,7 @@ function _getAmountYield(plantType, localTemp, localHum) {
 	var idealTemp = plantInfo["temp"];
 	var idealHum = plantInfo["hum"];
 
-	var plantAmountStr = plantInfo["wt"];
+	var plantAmountStr = plantInfo["mass"];
     plantAmountStr = plantAmountStr.substring(0, plantAmountStr.length - 3);
     var amountSplit = plantAmountStr.split("-");
     var minAmount = parseFloat(amountSplit[0]);
