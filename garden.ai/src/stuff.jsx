@@ -72,12 +72,12 @@ class Home extends React.Component {
         for (let i = 0; i < this.state.fruit.length; i++) {
             var delay = Math.random() * 10;
             var fallDuration = Math.random() * 5 + 3;
-            var spinDuration = Math.random() * 3 + 1;
+            var spinDuration = Math.random() * 360 ;
             fallingFruit.push(<FallingFruit image={this.state.fruit[i] + ".png"} left={x+ "%"} delay={delay + "s"} fallDuration={fallDuration + "s"} spinDuration={spinDuration + "s"} />);
             x+=2;
         }
         this.setState({ fallingFruit });
-        
+        /*
         const provider = new GoogleAuthProvider();
         const auth = getAuth();
         signInWithPopup(auth, provider)
@@ -91,7 +91,7 @@ class Home extends React.Component {
                 const errorMessage = error.message;
                 const email = error.customData.email;
                 const credential = GoogleAuthProvider.credentialFromError(error);
-        });
+        });*/
     }
     
 
@@ -557,9 +557,8 @@ class FallingFruit extends React.Component {
                         animation:
                             "fall " +
                             this.props.fallDuration +
-                            " linear infinite,spin " +
-                            this.props.spinDuration +
-                            " linear infinite",
+                            " linear "+this.props.delay+" infinite",
+                        transform:"rotate("+this.props.spinDuration+"deg)",
                     }}
                 />
             </>
